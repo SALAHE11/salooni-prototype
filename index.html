@@ -111,6 +111,10 @@ html[lang=ar] .btn{font-weight:700}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .chips button{padding:10px 14px;border-radius:12px;background:var(--neu);font-weight:700;font-size:15px}
 .chips button.on{background:var(--ink);color:#fff}
+.chips button.off{background:var(--dangerBg);color:var(--danger);text-decoration:line-through}
+.chips.hours button{min-width:72px;min-height:48px}
+button.rule{width:100%;text-align:start;background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:12px;align-items:center}
+button.rule b{color:var(--ink);font-size:14px}
 .pos{display:flex;align-items:center;gap:16px}
 .pos .n{width:84px;height:84px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:800;flex:none}
 .pos .n.acc{background:var(--acc);color:var(--ink)}
@@ -189,7 +193,15 @@ fr:{
  yourTurn:'C\'est votre tour',yourTurnSub:'Vous êtes au fauteuil chez {n}.',theLine:'La file chez {n}',youTag:'Vous',
  leave:'Quitter la file',leaveQ:'Quitter la file ?',leaveInfo:'Votre place sera libérée et les suivants avanceront.',leaveYes:'Oui, quitter',stay:'Rester',left:'Vous avez quitté la file',
  soon:'Bientôt votre tour',soonMsg:'Plus que {k} chez {n}. Partez maintenant.',two:'2 personnes',one:'1 personne',
- estLabel:'Attente estimée', profile:'Profil',phone:'06 •• •• 12 34',done:'Terminé'
+ estLabel:'Attente estimée', profile:'Profil',phone:'06 •• •• 12 34',done:'Terminé',
+ resToday:'Réservations aujourd\'hui',resOnL:'Ouvertes',resOffL:'Fermées',blockedN:'{n} h bloquées',
+ resSheetInfo:'Seuls vos habitués (★) peuvent réserver. Une réservation ne passe jamais devant les clients déjà dans la file.',
+ resKept:'Les réservations déjà prises restent dans la file.',
+ blockH:'Heures sans réservation',blockInfo:'Touchez les heures où vous ne voulez pas de réservation.',noHours:'Plus d\'heure aujourd\'hui : le salon ferme à {t}.',
+ resOffClient:'{n} ne prend pas de réservations aujourd\'hui.',noSlots:'Plus d\'heure libre aujourd\'hui.',slotGone:'Cette heure n\'est plus libre',
+ afterLine:'Les heures commencent après la file actuelle : vous ne passez devant personne.',
+ resAhead1:'Réservation avant vous : {t}',resAheadN:'Réservations avant vous : {t}',
+ cancelledRes:'{n} a annulé votre réservation de {t}.',removedMsg:'{n} vous a retiré de la file.'
 },
 ar:{
  tabFile:'الطابور',tabStats:'الإحصائيات',tabShop:'صالوني',tabSalons:'صالوناتي',tabMyq:'دوري',tabProfile:'حسابي',
@@ -223,7 +235,15 @@ ar:{
  yourTurn:'حان دورك',yourTurnSub:'أنت على الكرسي عند {n}.',theLine:'الطابور عند {n}',youTag:'أنت',
  leave:'مغادرة الطابور',leaveQ:'مغادرة الطابور؟',leaveInfo:'سيتم تحرير مكانك وسيتقدم من بعدك.',leaveYes:'نعم، غادر',stay:'البقاء',left:'غادرت الطابور',
  soon:'اقترب دورك',soonMsg:'بقي {k} فقط قبلك عند {n}. انطلق الآن.',two:'شخصان',one:'شخص واحد',
- estLabel:'الانتظار المتوقع', profile:'حسابي',phone:'06 •• •• 12 34',done:'تم'
+ estLabel:'الانتظار المتوقع', profile:'حسابي',phone:'06 •• •• 12 34',done:'تم',
+ resToday:'الحجوزات اليوم',resOnL:'مفتوحة',resOffL:'مغلقة',blockedN:'{n} ساعات بدون حجز',
+ resSheetInfo:'الزبائن الدائمون (★) فقط يمكنهم الحجز. الحجز لا يتقدّم أبداً على الزبائن الموجودين في الطابور.',
+ resKept:'الحجوزات المسجّلة من قبل تبقى في الطابور.',
+ blockH:'ساعات بدون حجز',blockInfo:'اضغط على الساعات التي لا تريد فيها حجوزات.',noHours:'لا توجد ساعات أخرى اليوم: الصالون يغلق على {t}.',
+ resOffClient:'{n} لا يقبل الحجوزات اليوم.',noSlots:'لا توجد ساعة متاحة اليوم.',slotGone:'هذه الساعة لم تعد متاحة',
+ afterLine:'الساعات تبدأ بعد الطابور الحالي: لن تتقدّم على أحد.',
+ resAhead1:'حجز قبلك: {t}',resAheadN:'حجوزات قبلك: {t}',
+ cancelledRes:'ألغى {n} حجزك على {t}.',removedMsg:'حذفك {n} من الطابور.'
 }};
 
 const ICONS={
@@ -254,19 +274,19 @@ function hhmm(ts){const d=new Date(ts);return String(d.getHours()).padStart(2,'0
 function roundUp(ts,step){const m=step*60000;return Math.ceil(ts/m)*m}
 function initial(lang,mode){
   const now=Date.now();
-  return {v:1,lang:lang||'ar',mode:mode||'barber',btab:'file',ctab:'salons',cview:'list',nextId:100,
+  return {v:2,lang:lang||'ar',mode:mode||'barber',btab:'file',ctab:'salons',cview:'list',nextId:100,
     barbers:{
-      hamid:{status:'open',pauseUntil:null,chair:null,chairSince:null,last:{src:'walk',person:'karim'},waitSince:null,
+      hamid:{status:'open',pauseUntil:null,resOn:true,blocked:[],chair:null,chairSince:null,last:{src:'walk',person:'karim'},waitSince:null,
         queue:[{id:1,src:'res',person:'youssef',time:hhmm(roundUp(now,5))},{id:2,src:'app',person:'hamza'},{id:3,src:'walk'},{id:4,src:'app',person:'mehdi'},{id:5,src:'call',person:'omar'}]},
-      yassine:{status:'open',pauseUntil:null,chair:{id:6,src:'walk',person:'said'},chairSince:now-9*60000,last:{src:'walk',person:'bilal'},waitSince:null,queue:[{id:7,src:'walk'}]},
-      rachid:{status:'pause',pauseUntil:roundUp(now+40*60000,30),chair:null,chairSince:null,last:null,waitSince:null,queue:[]}
+      yassine:{status:'open',pauseUntil:null,resOn:true,blocked:[],chair:{id:6,src:'walk',person:'said'},chairSince:now-9*60000,last:{src:'walk',person:'bilal'},waitSince:null,queue:[{id:7,src:'walk'}]},
+      rachid:{status:'pause',pauseUntil:roundUp(now+40*60000,30),resOn:true,blocked:[],chair:null,chairSince:null,last:null,waitSince:null,queue:[]}
     },
     stars:{'hamid:youssef':true},
     stats:{cuts:11,app:3,skips:1},
     my:{barber:null,entry:null,alerted:false,skippedBy:null}
   };
 }
-function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v===1)return s}catch(e){}return initial()}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v===2)return s}catch(e){}return initial()}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 S=load();
 
@@ -323,7 +343,8 @@ function barberQueue(b){
       h+=`<div class="next"><div class="lbl" style="padding-top:8px">${t('nextUp')}</div>${row}<div class="three"><button data-a="wait" class="${w!==null?'act':''}">${t('wait')}</button><button data-a="shift" class="warnb">${t('shift')}</button><button data-a="skip">${t('skip')}</button></div>${w!==null?`<div class="waitnote">${t('waitingFor',{m:w})}</div>`:''}</div>`}
     else h+=row;
   });
-  h+=`<div class="rule">${ic('star','ico')}<span>${t('starInfo')}</span></div>`;
+  const nb=b.blocked.length;
+  h+=`<button class="rule" data-a="ressheet">${ic('star','ico')}<span class="grow"><b>${t('resToday')} · ${b.resOn?t('resOnL'):t('resOffL')}${b.resOn&&nb?' · '+t('blockedN',{n:nb}):''}</b><br>${t('starInfo')}</span>${ic('chev','ico flip')}</button>`;
   return h;
 }
 function barberBar(b){const nx=b.queue[0];const sub=nx?t('nextSub',{n:ename(nx)}):(b.chair?t('finishSub'):'');
@@ -355,14 +376,29 @@ function shopPage(){
     else if(p)h+=`<div class="banner info"><span class="grow">${p.chair?t('yourTurn'):t('inThis',{p:p.index+1})}</span><button data-a="gomyq">${t('seeMine')}</button></div>`;
     else if(S.my.barber&&S.my.entry)h+=`<p class="muted" style="margin:10px 0 0">${t('inOther',{n:bname(S.my.barber)})}</p><button class="btn light" data-a="gomyq">${t('seeMine')}</button>`;
     else{h+=`<button class="btn accent" data-a="joinsheet" data-b="${k}">${t('join')}</button>`;
-      if(S.stars[k+':'+ME]){const slots=resSlots();h+=`<div class="resv"><div style="font-weight:800">${ic('star','ico" style="color:var(--star);vertical-align:-4px','currentColor')} ${t('reserve')}</div><div class="muted">${t('regularsOnly',{n:bname(k)})}</div><div class="chips">${slots.map(s=>`<button class="${ui.resTime===s?'on':''}" data-a="pickres" data-v="${s}">${s}</button>`).join('')}</div>${ui.resTime?`<button class="btn dark" data-a="reserve" data-b="${k}">${t('confirm')} · ${ui.resTime}</button>`:`<div class="muted" style="margin-top:8px">${t('pickTime')}</div>`}</div>`}}
+      if(S.stars[k+':'+ME]){const head=`<div class="resv"><div style="font-weight:800">${ic('star','ico" style="color:var(--star);vertical-align:-4px','currentColor')} ${t('reserve')}</div>`;
+        if(!b.resOn)h+=head+`<div class="muted">${t('resOffClient',{n:bname(k)})}</div></div>`;
+        else{const slots=resSlots(k);if(ui.resB===k&&ui.resTime&&slots.indexOf(ui.resTime)<0)ui.resTime=null;const pick=ui.resB===k?ui.resTime:null;
+          h+=head+`<div class="muted">${t('regularsOnly',{n:bname(k)})}</div>`;
+          if(!slots.length)h+=`<div class="muted" style="margin-top:8px;font-weight:700">${t('noSlots')}</div></div>`;
+          else h+=`<div class="rule" style="margin-top:6px">${ic('info','ico')}<span>${t('afterLine')}</span></div><div class="chips">${slots.map(s=>`<button class="${pick===s?'on':''}" data-a="pickres" data-b="${k}" data-v="${s}">${s}</button>`).join('')}</div>${pick?`<button class="btn dark" data-a="reserve" data-b="${k}">${t('confirm')} · ${pick}</button>`:`<div class="muted" style="margin-top:8px">${t('pickTime')}</div>`}</div>`}}}
     h+=`</div>`}
   return h}
-function resSlots(){const s=[];let ts=roundUp(Date.now()+45*60000,30);for(let i=0;i<4;i++){s.push(hhmm(ts));ts+=30*60000}return s}
+const OPEN_H=9,CLOSE_H=21;
+function dayAt(h){const d=new Date(Date.now());d.setHours(h,0,0,0);return d.getTime()}
+function resList(b){return b.queue.filter(e=>e.src==='res')}
+// Reservation rule: slots start after the current line would be done (20 min per person, at least 45 min),
+// stop 30 min before closing, and skip the hours the barber blocked and the times already taken.
+function resSlots(k){const b=S.barbers[k],n=b.queue.length+(b.chair?1:0),last=dayAt(CLOSE_H)-30*60000,taken={};
+  resList(b).concat(b.chair&&b.chair.src==='res'?[b.chair]:[]).forEach(e=>{taken[e.time]=1});
+  const s=[];for(let ts=roundUp(Date.now()+Math.max(45,n*20)*60000,30);ts<=last&&s.length<4;ts+=30*60000){const hr=new Date(ts).getHours();if(hr<OPEN_H||b.blocked.indexOf(hr)>=0||taken[hhmm(ts)])continue;s.push(hhmm(ts))}
+  return s}
+function blockHours(){const h=[];for(let x=Math.max(OPEN_H,new Date(Date.now()).getHours());x<CLOSE_H;x++)h.push(x);return h}
 function myQueue(){
   const p=myPos();
   if(!p){let h='';if(S.my.skippedBy)h+=`<div class="banner warn">${ic('info')}<span class="grow">${t('skippedMsg',{n:bname(S.my.skippedBy)})}</span></div>`;
-    return h+`<div class="empty">${ic('ticket','ico" style="width:48px;height:48px;color:var(--line)')}<div style="margin-top:8px;font-weight:700;color:var(--ink)">${t('notInQueue')}</div></div><button class="btn accent" data-a="gosalons">${S.my.skippedBy?t('rejoin'):t('seeSalons')}</button>`}
+    if(S.my.removedBy)h+=`<div class="banner warn">${ic('info')}<span class="grow">${S.my.removedRes?t('cancelledRes',{n:bname(S.my.removedBy),t:S.my.removedRes}):t('removedMsg',{n:bname(S.my.removedBy)})}</span></div>`;
+    return h+`<div class="empty">${ic('ticket','ico" style="width:48px;height:48px;color:var(--line)')}<div style="margin-top:8px;font-weight:700;color:var(--ink)">${t('notInQueue')}</div></div><button class="btn accent" data-a="gosalons">${S.my.skippedBy||S.my.removedBy?t('rejoin'):t('seeSalons')}</button>`}
   const k=S.my.barber,b=S.barbers[k];
   let h='';
   if(p.chair)h+=`<div class="card" style="background:var(--ink);color:#fff;border:0"><div class="pos"><div class="n acc">${ic('star','ico" style="width:36px;height:36px','currentColor')}</div><div><div style="font-size:24px;font-weight:800">${t('yourTurn')}</div><div style="color:var(--onDarkMut);font-size:14px">${t('yourTurnSub',{n:bname(k)})}</div></div></div></div>`;
@@ -396,8 +432,12 @@ function sheetBody(s){
     if(b.status==='closed')return `<h3>${t('closedBanner')}</h3><button class="btn accent" data-a="reopen">${t('reopen')}</button><button class="btn light" data-a="closesheet">${t('cancel')}</button>`;
     return `<h3>${t('queueMenu')}</h3><div style="font-weight:800;margin-top:14px">${ic('pause','ico" style="vertical-align:-4px')} ${t('pauseFor')}</div><p>${t('pauseInfo')}</p><div class="chips"><button data-a="pause" data-v="15">${t('min15')}</button><button data-a="pause" data-v="30">${t('min30')}</button><button data-a="pause" data-v="60">${t('h1')}</button></div>
     <div style="font-weight:800;margin-top:18px">${ic('lock','ico" style="vertical-align:-4px')} ${t('closeQ')}</div><p>${t('closeInfo')}</p><button class="btn danger" data-a="close">${t('closeQ')}</button><button class="btn light" data-a="closesheet">${t('cancel')}</button>`}
-  if(s.type==='join'){const k=s.b,bb=S.barbers[k];const tot=bb.queue.length+(bb.chair?1:0);
-    return `<h3>${t('joinQ',{n:bname(k)})}</h3><p style="font-weight:700;color:var(--ink)">${t('joinPos',{p:bb.queue.length+1,...range(tot)})}</p><div class="rule" style="font-size:14px">${ic('info','ico')}<span>${t('rule')}</span></div><button class="btn accent" data-a="join" data-b="${k}">${t('confirm')}</button><button class="btn light" data-a="closesheet">${t('cancel')}</button>`}
+  if(s.type==='res'){const hrs=blockHours();
+    return `<h3>${t('resToday')}</h3><p>${t('resSheetInfo')}</p><div class="seg" style="margin-top:14px"><button class="${b.resOn?'on':''}" data-a="reson" data-v="1">${t('resOnL')}</button><button class="${b.resOn?'':'on'}" data-a="reson" data-v="0">${t('resOffL')}</button></div>
+    ${b.resOn?`<div style="font-weight:800;margin-top:18px">${ic('clock','ico" style="vertical-align:-4px')} ${t('blockH')}</div>${hrs.length?`<p>${t('blockInfo')}</p><div class="chips hours">${hrs.map(x=>`<button class="${b.blocked.indexOf(x)>=0?'off':''}" data-a="blockhour" data-v="${x}" dir="ltr">${x}:00</button>`).join('')}</div>`:`<p>${t('noHours',{t:CLOSE_H+':00'})}</p>`}`:''}
+    <p style="margin-top:14px">${t('resKept')}</p><button class="btn dark" data-a="closesheet">${t('done')}</button>`}
+  if(s.type==='join'){const k=s.b,bb=S.barbers[k];const tot=bb.queue.length+(bb.chair?1:0);const rs=resList(bb).map(e=>e.time);
+    return `<h3>${t('joinQ',{n:bname(k)})}</h3><p style="font-weight:700;color:var(--ink)">${t('joinPos',{p:bb.queue.length+1,...range(tot)})}</p>${rs.length?`<div class="rule" style="font-size:14px;color:var(--star);font-weight:700">${ic('star','ico')}<span>${t(rs.length>1?'resAheadN':'resAhead1',{t:rs.join(' · ')})}</span></div>`:''}<div class="rule" style="font-size:14px">${ic('info','ico')}<span>${t('rule')}</span></div><button class="btn accent" data-a="join" data-b="${k}">${t('confirm')}</button><button class="btn light" data-a="closesheet">${t('cancel')}</button>`}
   if(s.type==='leave')return `<h3>${t('leaveQ')}</h3><p>${t('leaveInfo')}</p><button class="btn danger" data-a="leave">${t('leaveYes')}</button><button class="btn light" data-a="closesheet">${t('stay')}</button>`;
   if(s.type==='reset')return `<h3>${t('resetQ')}</h3><p>${t('resetInfo')}</p><button class="btn dark" data-a="reset">${t('reset')}</button><button class="btn light" data-a="closesheet">${t('cancel')}</button>`;
   return''}
@@ -406,7 +446,6 @@ let toastTimer,notifTimer;
 function toast(msg,undo){ui.toast={msg,undo:!!undo};clearTimeout(toastTimer);toastTimer=setTimeout(()=>{ui.toast=null;renderLayer()},undo?5000:3000)}
 function showNotif(msg){ui.notif=msg;clearTimeout(notifTimer);if(navigator.vibrate)try{navigator.vibrate(200)}catch(e){}notifTimer=setTimeout(()=>{ui.notif=null;renderLayer()},7000);renderLayer()}
 function newId(){return ++S.nextId}
-function insertRes(q,time){const [h,m]=time.split(':').map(Number);const d=new Date();d.setHours(h,m,0,0);const mins=(d-Date.now())/60000;return Math.max(0,Math.min(q.length,Math.floor(mins/17.5)))}
 
 const A={
  tab(d){S[d.g]=d.v;if(d.g==='ctab')S.cview='list';ui.resTime=null},
@@ -414,6 +453,9 @@ const A={
  setlang(d){S.lang=d.v},
  mode(){S.mode=S.mode==='barber'?'client':'barber';ui.sheet=null;ui.toast=null;ui.undo=null},
  qmenu(){ui.sheet={type:'qmenu'}},
+ ressheet(){ui.sheet={type:'res'}},
+ reson(d){S.barbers[MY_BARBER].resOn=d.v==='1'},
+ blockhour(d){const bl=S.barbers[MY_BARBER].blocked,x=+d.v,i=bl.indexOf(x);if(i>=0)bl.splice(i,1);else bl.push(x)},
  closesheet(){ui.sheet=null},
  addsheet(){ui.sheet={type:'add'}},
  addwalk(){addEntry('walk')},addcall(){addEntry('call')},
@@ -426,7 +468,7 @@ const A={
  skip(){const b=S.barbers[MY_BARBER];if(!b.queue.length)return;snapshot();const e=b.queue.shift();b.waitSince=null;S.stats.skips++;if(e.id===S.my.entry){S.my={barber:null,entry:null,alerted:false,skippedBy:MY_BARBER}}toast(t('skipped',{n:ename(e)}),true)},
  star(d){const b=S.barbers[MY_BARBER];const e=b.queue.find(x=>x.id==d.id);if(!e||!e.person)return;const k=MY_BARBER+':'+e.person;if(S.stars[k]){delete S.stars[k];toast(t('unstarred',{n:ename(e)}))}else{S.stars[k]=true;toast(t('starred',{n:ename(e)}))}ui.sheet=null},
  rowmenu(d){ui.sheet={type:'row',id:+d.id}},
- remove(d){const b=S.barbers[MY_BARBER];const i=b.queue.findIndex(x=>x.id==d.id);if(i<0)return;snapshot();const e=b.queue.splice(i,1)[0];if(i===0)b.waitSince=null;if(e.id===S.my.entry)S.my={barber:null,entry:null,alerted:false,skippedBy:null};ui.sheet=null;toast(t('removed',{n:ename(e)}),true)},
+ remove(d){const b=S.barbers[MY_BARBER];const i=b.queue.findIndex(x=>x.id==d.id);if(i<0)return;snapshot();const e=b.queue.splice(i,1)[0];if(i===0)b.waitSince=null;if(e.id===S.my.entry)S.my={barber:null,entry:null,alerted:false,skippedBy:null,removedBy:MY_BARBER,removedRes:e.src==='res'?e.time:null};ui.sheet=null;toast(t('removed',{n:ename(e)}),true)},
  pause(d){const b=S.barbers[MY_BARBER];b.status='pause';b.pauseUntil=roundUp(Date.now()+(+d.v)*60000,5);ui.sheet=null},
  resume(){const b=S.barbers[MY_BARBER];b.status='open';b.pauseUntil=null;ui.sheet=null},
  close(){S.barbers[MY_BARBER].status='closed';S.barbers[MY_BARBER].pauseUntil=null;ui.sheet=null},
@@ -435,11 +477,13 @@ const A={
  resetsheet(){ui.sheet={type:'reset'}},
  reset(){S=initial(S.lang,'barber');ui.sheet=null;ui.undo=null;ui.resTime=null;toast(t('resetDone'))},
  openshop(){S.cview='shop'},closeshop(){S.cview='list';ui.resTime=null},
- gomyq(){S.ctab='myq';S.cview='list'},gosalons(){S.ctab='salons';S.cview=S.my.skippedBy?'shop':'list';S.my.skippedBy=null},
+ gomyq(){S.ctab='myq';S.cview='list'},gosalons(){S.ctab='salons';S.cview=S.my.skippedBy||S.my.removedBy?'shop':'list';S.my.skippedBy=null;S.my.removedBy=null;S.my.removedRes=null},
  joinsheet(d){ui.sheet={type:'join',b:d.b}},
  join(d){const b=S.barbers[d.b];if(b.status!=='open')return;const e={id:newId(),src:'app',person:ME};b.queue.push(e);S.my={barber:d.b,entry:e.id,alerted:false,skippedBy:null};ui.sheet=null;S.ctab='myq';S.cview='list';toast(t('joined',{n:bname(d.b)}))},
- pickres(d){ui.resTime=d.v},
- reserve(d){const b=S.barbers[d.b];if(!ui.resTime)return;const e={id:newId(),src:'res',person:ME,time:ui.resTime};b.queue.splice(insertRes(b.queue,ui.resTime),0,e);S.my={barber:d.b,entry:e.id,alerted:false,skippedBy:null};toast(t('reserved',{t:ui.resTime,n:bname(d.b)}));ui.resTime=null;S.ctab='myq';S.cview='list'},
+ pickres(d){ui.resTime=d.v;ui.resB=d.b},
+ reserve(d){const b=S.barbers[d.b];if(!ui.resTime||ui.resB!==d.b)return;if(b.status!=='open'||!b.resOn||resSlots(d.b).indexOf(ui.resTime)<0){ui.resTime=null;toast(t('slotGone'));return}
+   /* A reservation always goes to the end of the line: it never passes anyone already waiting. */
+   const e={id:newId(),src:'res',person:ME,time:ui.resTime};b.queue.push(e);S.my={barber:d.b,entry:e.id,alerted:false,skippedBy:null};toast(t('reserved',{t:ui.resTime,n:bname(d.b)}));ui.resTime=null;S.ctab='myq';S.cview='list'},
  leavesheet(){ui.sheet={type:'leave'}},
  leave(){const m=S.my;if(m.barber){const b=S.barbers[m.barber];const i=b.queue.findIndex(x=>x.id===m.entry);if(i>=0){b.queue.splice(i,1);if(i===0)b.waitSince=null}}S.my={barber:null,entry:null,alerted:false,skippedBy:null};ui.sheet=null;toast(t('left'))},
  notiftap(){ui.notif=null;if(S.mode==='client'){S.ctab='myq';S.cview='list'}}

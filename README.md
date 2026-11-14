@@ -1,4 +1,4 @@
-# Salooni — clickable prototype (v1)
+# Salooni — clickable prototype (v2)
 
 An installable web app for testing Salooni's user stories with barbers. It isn't real software: all data is invented and lives only on the phone you test with. It works offline after the first visit.
 
@@ -39,7 +39,11 @@ Edit the files, change `VERSION` in `sw.js` (for example to `salooni-proto-v2`),
 | Passer (US-04) | Removes the client and counts one absence (Statistiques). |
 | Alert (US-16) | Fires once, when 2 people are ahead, as an in-app notification. |
 | Wait range (US-15) | 15–20 min per person ahead, the person in the chair included. |
-| Who can reserve (US-09, US-20) | Only clients the barber starred. Slots every 30 min, starting about 45 min from now. |
+| Who can reserve (US-09, US-20) | Only clients the barber starred. |
+| Where a reservation goes (US-20) | At the end of the line. Slots start after the current line would be done (20 min per person, at least 45 min from now), so a reservation never passes anyone already waiting. If the line moves faster than that, the barber uses Attendre or Décaler as for any late client. |
+| What later clients see (US-19) | Before confirming, the join screen lists the reservations ahead ("Réservation avant vous : 13:00"). They count in the position and the wait. |
+| Barber's control of reservations | *File → Réservations aujourd'hui*: an on/off switch, and today's hours as buttons; a tapped hour offers no slots. Nothing is offered after 20:30 (the shop closes at 21:00). Reservations already taken stay. |
+| Taken and cancelled slots | A taken time disappears for other regulars. If the barber removes a client, the client sees "Hamid a annulé votre réservation de 13:00" (or "vous a retiré de la file"). |
 | Pause (US-06) | 15 min, 30 min or 1 h. Nobody can join during the break. |
 | Close the queue (US-08) | Nobody can join. People already in line stay. |
 
@@ -51,14 +55,27 @@ Every barber action (add, next, décaler, passer, remove) shows a toast with **A
 
 1. **Queue basics (US-01, 02, 03, 24, 25).** Hand him the phone: "A client just walked in. Add him." Then "someone calls", then "you finished a cut". Count his taps and note where he hesitates.
 2. **Late client (US-04).** "Youssef booked but isn't here. What do you do?" Let him pick Attendre, Décaler or Passer. Ask: *How many places should Décaler move him? Should it count against him?*
-3. **Regulars (US-09, 20).** Have him star Anas. Switch to client mode and show *Réserver une heure*. Ask: *Who in your shop would get a star?*
+3. **Regulars (US-09, 20).** Have Anas join the queue, star him on the barber side, then leave the queue as Anas. In client mode show *Réserver une heure*: the hours start after the line. Reserve, then show the barber where Anas landed (last). Ask: *Who in your shop would get a star?*
+   - **Walk-in shop:** before handing over the phone, open *Réservations aujourd'hui* and set it to *Fermées*. Run steps 1 and 2 as a pure queue, then show that he could open reservations for a few loyal clients and that they never pass the bench.
+   - **Shop that takes bookings:** leave it on *Ouvertes*. Have him block an hour and check that the client no longer sees it. Ask: *Which hours would you block? Lunch, Friday prayer? Should a reservation have to be accepted by you first?*
 4. **Pause and closing (US-06, 08).** *Would you use these? When? Before Eid?*
 5. **Client side (US-13, 14, 15, 16, 18, 19).** Join Hamid's queue as Anas. Switch back, tap Suivant until the alert shows, then switch to client. Ask: *Is 2 people ahead the right moment? Is the wait range realistic for your shop?*
 6. **Statistiques (US-27).** *What would you want to see here at the end of the day?*
 7. **Pilot and price (US-26).** *After a free month, if it works, what would it be worth to you each month?*
 8. **Close:** *What did we miss? What would stop you from using it on a Saturday?*
 
+The reservation step only works while slots remain, so run it before about 19:00 (earlier if the line is long).
+
 **After:** add the story IDs, timestamps and quotes from the recording to the synthesis sheet's Notes tab.
+
+## One-minute demo (incubator)
+
+Reset the demo first.
+
+1. **Barber:** *Ajouter → Sur place*. A walk-in is in the line in two taps, with no client app needed.
+2. **Client** (*Mon salon → Passer en mode client*): the shop page shows each barber's line and a wait range. Join Hamid's queue.
+3. **Barber:** star Anas. **Client:** leave the queue, then *Réserver une heure*. The hours start after the line: a regular's booking never passes people who are waiting.
+4. **Barber:** *Réservations aujourd'hui*, block an hour. The barber decides when he takes bookings; walk-ins and bookings stay in one line.
 
 ## Files
 

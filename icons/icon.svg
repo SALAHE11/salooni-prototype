@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>Salooni icon – Deep tea</title>
+  <rect width="1024" height="1024" fill="#0A2620"/>
+  <!-- Left ring -->
+  <circle cx="317" cy="512" r="119" fill="none" stroke="#FFFFFF" stroke-width="80"/>
+  <!-- Right ring + center dot -->
+  <circle cx="707" cy="512" r="119" fill="none" stroke="#F2632C" stroke-width="80"/>
+  <circle cx="707" cy="512" r="43" fill="#F2632C"/>
+</svg>

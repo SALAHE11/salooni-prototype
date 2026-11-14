@@ -1,9 +1,11 @@
-# Salooni — clickable prototype (v2)
+# Salooni — clickable prototype (v3)
 
 An installable web app for testing Salooni's user stories with barbers. It isn't real software: all data is invented and lives only on the phone you test with. It works offline after the first visit.
 
 - **Languages:** Arabic (default) and French. Tap the `FR` / `ع` button at the top of any screen.
-- **Two profiles on one phone:** barber (Hamid at Salon Hamid, Al Massira) and client (Anas). Switch under *Mon salon* or *Profil*. Both profiles share the same queue: what the barber does shows up on the client side.
+- **Profiles on one phone:** barber (Hamid at Salon Hamid, Al Massira) and three clients. Switch between barber and client under *Mon salon* or *Profil*. Everyone shares the same queue: what the barber does shows up on the client side.
+- **Three demo clients:** choose one under *Profil → Client de démo*. Each has his own place and requests. After a reset, Youssef is a starred regular with a reservation (1st in line), Mehdi joined through the app (4th), and Anas isn't in any line.
+- **Two working modes for the barber:** *Mon salon → Réglages*. The default is *File d'attente*. *Rendez-vous uniquement* is for shops that work by appointment only. Changing mode reloads an example for that mode.
 - **Reset:** *Mon salon → Réinitialiser la démo* brings back the starting state: 5 clients in Hamid's queue, Yassine with 1, Rachid on a break.
 
 ## Put it online with GitHub Pages (about 5 minutes)
@@ -44,6 +46,9 @@ Edit the files, change `VERSION` in `sw.js` (for example to `salooni-proto-v2`),
 | What later clients see (US-19) | Before confirming, the join screen lists the reservations ahead ("Réservation avant vous : 13:00"). They count in the position and the wait. |
 | Barber's control of reservations | *File → Réservations aujourd'hui*: an on/off switch, and today's hours as buttons; a tapped hour offers no slots. Nothing is offered after 20:30 (the shop closes at 21:00). Reservations already taken stay. |
 | Taken and cancelled slots | A taken time disappears for other regulars. If the barber removes a client, the client sees "Hamid a annulé votre réservation de 13:00" (or "vous a retiré de la file"). |
+| Valider chaque demande (Réglages) | Off by default: a regular's reservation enters the line directly. On: it waits as a request until the barber taps Accepter or Refuser. Always on in Rendez-vous mode. |
+| Rendez-vous uniquement (Réglages) | No queue to join. Any client, starred or not, can request a free time; the barber accepts or refuses. The barber adds phone or walk-in bookings with *Ajouter* by picking a time. Décaler is hidden. |
+| Durée d'un rendez-vous (Réglages) | 30 min, 45 min, 1 h or 1 h 30. Rendez-vous mode only: it sets the spacing of the times offered. It has no effect in File mode. |
 | Pause (US-06) | 15 min, 30 min or 1 h. Nobody can join during the break. |
 | Close the queue (US-08) | Nobody can join. People already in line stay. |
 
@@ -59,6 +64,7 @@ Every barber action (add, next, décaler, passer, remove) shows a toast with **A
    - **Walk-in shop:** before handing over the phone, open *Réservations aujourd'hui* and set it to *Fermées*. Run steps 1 and 2 as a pure queue, then show that he could open reservations for a few loyal clients and that they never pass the bench.
    - **Shop that takes bookings:** leave it on *Ouvertes*. Have him block an hour and check that the client no longer sees it. Ask: *Which hours would you block? Lunch, Friday prayer? Should a reservation have to be accepted by you first?*
 4. **Pause and closing (US-06, 08).** *Would you use these? When? Before Eid?*
+   - **Appointment-only shop:** in *Mon salon → Réglages* choose *Rendez-vous uniquement* and set the length he uses. Show the pending request (Mehdi) with Accepter / Refuser, then switch to client Anas and request a time. Ask: *How long is one booking for you? Would you accept requests from clients you don't know?*
 5. **Client side (US-13, 14, 15, 16, 18, 19).** Join Hamid's queue as Anas. Switch back, tap Suivant until the alert shows, then switch to client. Ask: *Is 2 people ahead the right moment? Is the wait range realistic for your shop?*
 6. **Statistiques (US-27).** *What would you want to see here at the end of the day?*
 7. **Pilot and price (US-26).** *After a free month, if it works, what would it be worth to you each month?*

@@ -115,6 +115,10 @@ html[lang=ar] .btn{font-weight:700}
 .chips.hours button{min-width:72px;min-height:48px}
 button.rule{width:100%;text-align:start;background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:12px;align-items:center}
 button.rule b{color:var(--ink);font-size:14px}
+.tm{font-size:14px;font-weight:800;min-width:52px;text-align:center;background:var(--neu);border-radius:8px;padding:5px 6px;flex:none}
+.pos .n.tmn{font-size:22px}
+.next.req{border-color:var(--info)}.next.req .lbl{color:var(--info)}
+.tiles.dim button{opacity:.4}
 .pos{display:flex;align-items:center;gap:16px}
 .pos .n{width:84px;height:84px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:800;flex:none}
 .pos .n.acc{background:var(--acc);color:var(--ink)}
@@ -158,7 +162,7 @@ html[lang=ar] .tiles button{font-weight:700}
 const KEY='salooni-proto-v1';
 const PEOPLE={youssef:{fr:'Youssef',ar:'يوسف'},hamza:{fr:'Hamza',ar:'حمزة'},mehdi:{fr:'Mehdi',ar:'مهدي'},omar:{fr:'Omar',ar:'عمر'},anas:{fr:'Anas',ar:'أنس'},karim:{fr:'Karim',ar:'كريم'},bilal:{fr:'Bilal',ar:'بلال'},said:{fr:'Saïd',ar:'سعيد'}};
 const BARBERS={hamid:{fr:'Hamid',ar:'حميد'},yassine:{fr:'Yassine',ar:'ياسين'},rachid:{fr:'Rachid',ar:'رشيد'}};
-const ME='anas',MY_BARBER='hamid';
+const MY_BARBER='hamid',CLIENTS=['anas','youssef','mehdi'],OPEN_H=9,CLOSE_H=21;
 
 const I18N={
 fr:{
@@ -201,7 +205,23 @@ fr:{
  resOffClient:'{n} ne prend pas de réservations aujourd\'hui.',noSlots:'Plus d\'heure libre aujourd\'hui.',slotGone:'Cette heure n\'est plus libre',
  afterLine:'Les heures commencent après la file actuelle : vous ne passez devant personne.',
  resAhead1:'Réservation avant vous : {t}',resAheadN:'Réservations avant vous : {t}',
- cancelledRes:'{n} a annulé votre réservation de {t}.',removedMsg:'{n} vous a retiré de la file.'
+ cancelledRes:'{n} a annulé votre réservation de {t}.',removedMsg:'{n} vous a retiré de la file.',
+ tabAppt:'Rendez-vous',myAppts:'Mes rendez-vous',apptsN:'{n} rendez-vous',noAppt:'Aucun rendez-vous',
+ requests:'Demandes en attente · {n}',accept:'Accepter',refuse:'Refuser',accepted:'{n} accepté · {t}',refused:'Demande de {n} refusée',
+ settings:'Réglages',workMode:'Mode de travail',modeQueue:'File d\'attente',modeAppt:'Rendez-vous uniquement',
+ modeQueueInfo:'Les clients rejoignent la file. Seuls les habitués peuvent réserver une heure.',
+ modeApptInfo:'Pas de file. Tout client peut demander une heure ; vous acceptez ou refusez.',
+ modeDemo:'Démo : changer de mode recharge un exemple.',modeChanged:'Mode changé · exemple rechargé',
+ apptLen:'Durée d\'un rendez-vous',min45:'45 min',h130:'1 h 30',
+ approveL:'Valider chaque demande',yes:'Oui',no:'Non',approveAlways:'Toujours activé en mode rendez-vous.',approveInfo:'Si oui, une réservation n\'entre dans la file qu\'après votre accord.',
+ apptOnly:'Sur rendez-vous',nextFree:'Prochaine heure libre : {t}',askTime:'Demander une heure',askInfo:'{n} accepte ou refuse chaque demande.',askBtn:'Demander · {t}',
+ reqSent:'Demande envoyée à {n} pour {t}',reqPending:'Demande envoyée pour {t} · en attente de {n}',reqWait:'En attente de réponse',cancelReq:'Annuler la demande',reqCancelled:'Demande annulée',
+ apptOffClient:'{n} ne prend pas de rendez-vous aujourd\'hui.',
+ reqAcceptedT:'Rendez-vous confirmé',reqAcceptedM:'{n} a accepté votre demande : {t}.',reqRefusedT:'Demande refusée',refusedMsg:'{n} a refusé votre demande de {t}.',
+ yourAppt:'Votre rendez-vous',inThisAppt:'Votre rendez-vous · {t}',cancelAppt:'Annuler mon rendez-vous',
+ addApptTitle:'Ajouter un rendez-vous',addedAt:'{n} ajouté · {t}',
+ demoClient:'Client de démo',demoClientInfo:'Chaque client a sa propre place et ses propres demandes.',
+ starInfoAppt:'Tout client peut demander une heure. Vous acceptez ou refusez.',nextUpAppt:'Prochain rendez-vous · s\'il n\'est pas là :'
 },
 ar:{
  tabFile:'الطابور',tabStats:'الإحصائيات',tabShop:'صالوني',tabSalons:'صالوناتي',tabMyq:'دوري',tabProfile:'حسابي',
@@ -243,7 +263,23 @@ ar:{
  resOffClient:'{n} لا يقبل الحجوزات اليوم.',noSlots:'لا توجد ساعة متاحة اليوم.',slotGone:'هذه الساعة لم تعد متاحة',
  afterLine:'الساعات تبدأ بعد الطابور الحالي: لن تتقدّم على أحد.',
  resAhead1:'حجز قبلك: {t}',resAheadN:'حجوزات قبلك: {t}',
- cancelledRes:'ألغى {n} حجزك على {t}.',removedMsg:'حذفك {n} من الطابور.'
+ cancelledRes:'ألغى {n} حجزك على {t}.',removedMsg:'حذفك {n} من الطابور.',
+ tabAppt:'المواعيد',myAppts:'مواعيدي',apptsN:'{n} مواعيد',noAppt:'لا توجد مواعيد',
+ requests:'طلبات في الانتظار · {n}',accept:'قبول',refuse:'رفض',accepted:'تم قبول {n} · {t}',refused:'تم رفض طلب {n}',
+ settings:'الإعدادات',workMode:'طريقة العمل',modeQueue:'طابور',modeAppt:'بالمواعيد فقط',
+ modeQueueInfo:'الزبائن ينضمون إلى الطابور. الزبائن الدائمون فقط يمكنهم حجز موعد.',
+ modeApptInfo:'بدون طابور. أي زبون يمكنه طلب ساعة، وأنت تقبل أو ترفض.',
+ modeDemo:'عرض تجريبي: تغيير الطريقة يعيد تحميل مثال.',modeChanged:'تم تغيير الطريقة · أعيد تحميل المثال',
+ apptLen:'مدة الموعد',min45:'45 د',h130:'ساعة ونصف',
+ approveL:'الموافقة على كل طلب',yes:'نعم',no:'لا',approveAlways:'مفعّلة دائماً في وضع المواعيد.',approveInfo:'إذا اخترت نعم، لا يدخل الحجز إلى الطابور إلا بعد موافقتك.',
+ apptOnly:'بالمواعيد',nextFree:'أقرب ساعة متاحة: {t}',askTime:'طلب موعد',askInfo:'{n} يقبل أو يرفض كل طلب.',askBtn:'طلب · {t}',
+ reqSent:'أُرسل الطلب إلى {n} على {t}',reqPending:'أُرسل طلبك على {t} · في انتظار {n}',reqWait:'في انتظار الرد',cancelReq:'إلغاء الطلب',reqCancelled:'تم إلغاء الطلب',
+ apptOffClient:'{n} لا يقبل المواعيد اليوم.',
+ reqAcceptedT:'تم تأكيد الموعد',reqAcceptedM:'قبل {n} طلبك: {t}.',reqRefusedT:'تم رفض الطلب',refusedMsg:'رفض {n} طلبك على {t}.',
+ yourAppt:'موعدك',inThisAppt:'موعدك · {t}',cancelAppt:'إلغاء موعدي',
+ addApptTitle:'إضافة موعد',addedAt:'تمت إضافة {n} · {t}',
+ demoClient:'زبون العرض',demoClientInfo:'لكل زبون مكانه وطلباته الخاصة.',
+ starInfoAppt:'أي زبون يمكنه طلب ساعة. أنت تقبل أو ترفض.',nextUpAppt:'الموعد التالي · إذا لم يكن حاضراً:'
 }};
 
 const ICONS={
@@ -269,24 +305,34 @@ const ICONS={
 };
 function ic(n,cls,fill){return `<svg class="${cls||'ico'}" viewBox="0 0 24 24" fill="${fill||'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`}
 
-let S,ui={sheet:null,toast:null,notif:null,undo:null,resTime:null};
+let S,ui={sheet:null,toast:null,notif:null,undo:null,resTime:null,resB:null,addTime:null};
 function hhmm(ts){const d=new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
 function roundUp(ts,step){const m=step*60000;return Math.ceil(ts/m)*m}
+function blank(x){return Object.assign({barber:null,entry:null,alerted:false,req:null,msg:null,flash:null},x||{})}
+function me(){return S.cl[S.me]}
+function hb(){return S.barbers[MY_BARBER]}
+function tsOf(time){const p=time.split(':');const d=new Date(Date.now());d.setHours(+p[0],+p[1],0,0);return d.getTime()}
+// Demo data for Hamid, one example per working mode. The three demo clients start in three different situations.
+function hamidSample(mode,len,now){
+  if(mode==='appt'){const L=len*60000,o=dayAt(OPEN_H),g=o+Math.max(0,Math.ceil((now-o)/L))*L,mk=(i,x)=>Object.assign({ts:g+i*L,time:hhmm(g+i*L),len},x);
+    return{queue:[mk(0,{id:11,src:'res',person:'youssef'}),mk(1,{id:12,src:'call',person:'omar'})],requests:[mk(3,{id:13,src:'res',person:'mehdi'})],
+      cl:{anas:blank(),youssef:blank({barber:'hamid',entry:11}),mehdi:blank({req:{barber:'hamid',id:13,time:hhmm(g+3*L)}})}}}
+  return{queue:[{id:1,src:'res',person:'youssef',time:hhmm(roundUp(now,5))},{id:2,src:'app',person:'hamza'},{id:3,src:'walk'},{id:4,src:'app',person:'mehdi'},{id:5,src:'call',person:'omar'}],requests:[],
+    cl:{anas:blank(),youssef:blank({barber:'hamid',entry:1}),mehdi:blank({barber:'hamid',entry:4})}}}
 function initial(lang,mode){
-  const now=Date.now();
-  return {v:2,lang:lang||'ar',mode:mode||'barber',btab:'file',ctab:'salons',cview:'list',nextId:100,
+  const now=Date.now(),hs=hamidSample('queue',30,now),set=()=>({resOn:true,blocked:[],mode:'queue',slotLen:30,approve:false,requests:[]});
+  return {v:3,lang:lang||'ar',mode:mode||'barber',btab:'file',ctab:'salons',cview:'list',nextId:100,me:'anas',
     barbers:{
-      hamid:{status:'open',pauseUntil:null,resOn:true,blocked:[],chair:null,chairSince:null,last:{src:'walk',person:'karim'},waitSince:null,
-        queue:[{id:1,src:'res',person:'youssef',time:hhmm(roundUp(now,5))},{id:2,src:'app',person:'hamza'},{id:3,src:'walk'},{id:4,src:'app',person:'mehdi'},{id:5,src:'call',person:'omar'}]},
-      yassine:{status:'open',pauseUntil:null,resOn:true,blocked:[],chair:{id:6,src:'walk',person:'said'},chairSince:now-9*60000,last:{src:'walk',person:'bilal'},waitSince:null,queue:[{id:7,src:'walk'}]},
-      rachid:{status:'pause',pauseUntil:roundUp(now+40*60000,30),resOn:true,blocked:[],chair:null,chairSince:null,last:null,waitSince:null,queue:[]}
+      hamid:Object.assign(set(),{status:'open',pauseUntil:null,chair:null,chairSince:null,last:{src:'walk',person:'karim'},waitSince:null,queue:hs.queue}),
+      yassine:Object.assign(set(),{status:'open',pauseUntil:null,chair:{id:6,src:'walk',person:'said'},chairSince:now-9*60000,last:{src:'walk',person:'bilal'},waitSince:null,queue:[{id:7,src:'walk'}]}),
+      rachid:Object.assign(set(),{status:'pause',pauseUntil:roundUp(now+40*60000,30),chair:null,chairSince:null,last:null,waitSince:null,queue:[]})
     },
     stars:{'hamid:youssef':true},
     stats:{cuts:11,app:3,skips:1},
-    my:{barber:null,entry:null,alerted:false,skippedBy:null}
+    cl:hs.cl
   };
 }
-function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v===2)return s}catch(e){}return initial()}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v===3)return s}catch(e){}return initial()}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 S=load();
 
@@ -294,14 +340,14 @@ function t(k,v){let s=(I18N[S.lang][k]||k);if(v)for(const x in v)s=s.split('{'+x
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function pname(k){return PEOPLE[k]?PEOPLE[k][S.lang]:k}
 function bname(k){return BARBERS[k][S.lang]}
-function ename(e){if(!e)return'';if(e.person===ME)return pname(ME);if(e.person)return pname(e.person);if(e.name)return esc(e.name);return e.src==='call'?t('caller'):t('walkin')}
-function stag(e){return `<span class="tag t-${e.src}">${e.src==='res'?t('res',{t:e.time}):t(e.src)}</span>`}
+function ename(e){if(!e)return'';if(e.person)return pname(e.person);if(e.name)return esc(e.name);return e.src==='call'?t('caller'):t('walkin')}
+function stag(e,plain){const l=e.src==='res'?(plain?t('app'):t('res',{t:e.time})):t(e.src)+(e.time&&!plain?' · '+e.time:'');return `<span class="tag t-${e.src}">${l}</span>`}
 function range(n){return{a:n*15,b:n*20}}
 function isApp(e){return e.src==='app'||e.src==='res'}
 function snapshot(){ui.undo=JSON.stringify(S)}
 function checkTimers(){const now=Date.now();for(const k in S.barbers){const b=S.barbers[k];if(b.status==='pause'&&b.pauseUntil&&b.pauseUntil<=now){b.status='open';b.pauseUntil=null}}}
-function myPos(){const m=S.my;if(!m.barber||!m.entry)return null;const b=S.barbers[m.barber];if(b.chair&&b.chair.id===m.entry)return{chair:true};const i=b.queue.findIndex(e=>e.id===m.entry);if(i<0)return null;return{index:i,ahead:i+(b.chair?1:0)}}
-function checkAlert(){const p=myPos();if(p&&!p.chair&&p.ahead<=2&&p.ahead>0&&!S.my.alerted){S.my.alerted=true;S.my.alertPending=true}}
+function myPos(){const m=me();if(!m.barber||!m.entry)return null;const b=S.barbers[m.barber];if(b.chair&&b.chair.id===m.entry)return{chair:true};const i=b.queue.findIndex(e=>e.id===m.entry);if(i<0)return null;return{index:i,ahead:i+(b.chair?1:0)}}
+function checkAlert(){const p=myPos(),m=me();if(p&&!p.chair&&S.barbers[m.barber].mode!=='appt'&&p.ahead<=2&&p.ahead>0&&!m.alerted){m.alerted=true;m.alertPending=true}}
 
 function render(){
   checkTimers();checkAlert();
@@ -309,15 +355,16 @@ function render(){
   const main=document.getElementById('main');const key=S.mode+S.btab+S.ctab+S.cview;const sc=main.dataset.k===key?main.scrollTop:0;
   let top='',body='',bar='',tabs='';
   if(S.mode==='barber'){
-    const b=S.barbers[MY_BARBER];
-    if(S.btab==='file'){top=topbar(t('myQueue')+' · '+bname(MY_BARBER),t('barberMode'),statusChip(b));body=barberQueue(b);bar=barberBar(b)}
+    const b=S.barbers[MY_BARBER],ap=b.mode==='appt';
+    if(S.btab==='file'){top=topbar(t(ap?'myAppts':'myQueue')+' · '+bname(MY_BARBER),t('barberMode'),statusChip(b));body=barberQueue(b);bar=barberBar(b)}
     if(S.btab==='stats'){top=topbar(t('tabStats'),t('barberMode'));body=barberStats()}
     if(S.btab==='shop'){top=topbar(t('tabShop'),t('barberMode'));body=barberShop()}
-    tabs=tab('btab','file','list',t('tabFile'))+tab('btab','stats','chart',t('tabStats'))+tab('btab','shop','store',t('tabShop'));
+    tabs=tab('btab','file','list',t(ap?'tabAppt':'tabFile'))+tab('btab','stats','chart',t('tabStats'))+tab('btab','shop','store',t('tabShop'));
   }else{
-    if(S.ctab==='salons'){if(S.cview==='shop'){top=topbar(t('shopName'),t('clientMode'));body=shopPage()}else{top=topbar(t('mySalons'),t('clientMode'));body=salonsList()}}
-    if(S.ctab==='myq'){top=topbar(t('tabMyq'),t('clientMode'));body=myQueue()}
-    if(S.ctab==='profile'){top=topbar(t('profile'),t('clientMode'));body=clientProfile()}
+    const cm=t('clientMode')+' · '+pname(S.me);
+    if(S.ctab==='salons'){if(S.cview==='shop'){top=topbar(t('shopName'),cm);body=shopPage()}else{top=topbar(t('mySalons'),cm);body=salonsList()}}
+    if(S.ctab==='myq'){top=topbar(t('tabMyq'),cm);body=myQueue()}
+    if(S.ctab==='profile'){top=topbar(t('profile'),cm);body=clientProfile()}
     tabs=tab('ctab','salons','home',t('tabSalons'))+tab('ctab','myq','ticket',t('tabMyq'))+tab('ctab','profile','user',t('tabProfile'));
   }
   document.getElementById('top').innerHTML=top;main.innerHTML=body;main.dataset.k=key;main.scrollTop=sc;
@@ -328,23 +375,30 @@ function topbar(title,sub,extra){return `<h1>${title}<span class="sub">${sub}</s
 function tab(group,id,icon,label){const on=S[group]===id;return `<button class="${on?'on':''}" data-a="tab" data-g="${group}" data-v="${id}">${ic(icon,'',null)}<span>${label}</span></button>`}
 function statusChip(b){if(b.status==='pause')return `<button class="chip warn" data-a="qmenu">${ic('pause','ico')}${hhmm(b.pauseUntil)}</button>`;if(b.status==='closed')return `<button class="chip danger" data-a="qmenu">${ic('lock','ico')}${t('closed')}</button>`;return `<button class="chip ok" data-a="qmenu">${t('open')} ${ic('down','ico')}</button>`}
 
+function reqBlock(b){
+  if(!b.requests.length)return'';
+  let h=`<div class="next req"><div class="lbl" style="padding-top:8px">${t('requests',{n:b.requests.length})}</div>`;
+  b.requests.forEach(e=>{h+=`<div class="row"><span class="tm" dir="ltr">${e.time}</span><span class="nm">${ename(e)}</span></div><div class="three" style="padding-top:0"><button class="act" data-a="accept" data-id="${e.id}">${t('accept')}</button><button data-a="refuse" data-id="${e.id}">${t('refuse')}</button></div>`});
+  return h+`</div>`}
 function barberQueue(b){
-  let h='';
+  const ap=b.mode==='appt';let h='';
   if(b.status==='pause')h+=`<div class="banner warn">${ic('pause')}<span class="grow">${t('pauseBanner',{t:hhmm(b.pauseUntil)})}</span><button data-a="resume">${t('resume')}</button></div>`;
   if(b.status==='closed')h+=`<div class="banner danger">${ic('lock')}<span class="grow">${t('closedBanner')}</span><button data-a="reopen">${t('reopen')}</button></div>`;
   if(b.chair)h+=`<div class="chair"><div class="seat busy"></div><div class="grow"><div class="k">${t('inChair')}</div><div class="v">${ename(b.chair)}</div><div class="t">${t('since',{t:hhmm(b.chairSince)})}</div></div>${stag(b.chair)}</div>`;
   else h+=`<div class="chair"><div class="seat"></div><div class="grow"><div class="v">${t('chairFree')}</div><div class="t">${b.last?t('lastCut',{n:ename(b.last)}):t('noCutYet')}</div></div></div>`;
+  h+=reqBlock(b);
   const n=b.queue.length,r=range(n+(b.chair?1:0));
-  h+=`<div class="meta"><span>${t('waiting',{n})}</span><span>${n?t('estimate',r):''}</span></div>`;
-  if(!n)h+=`<div class="empty">${t('nobody')}</div>`;
+  h+=`<div class="meta"><span>${ap?t('apptsN',{n}):t('waiting',{n})}</span><span>${n&&!ap?t('estimate',r):''}</span></div>`;
+  if(!n)h+=`<div class="empty">${t(ap?'noAppt':'nobody')}</div>`;
   b.queue.forEach((e,i)=>{
-    const row=`<div class="row" ${i?'':'style="min-height:52px"'}><span class="num">${i+1}</span><button class="nm" data-a="rowmenu" data-id="${e.id}" style="text-align:start">${ename(e)}</button>${stag(e)}${isApp(e)?`<button class="starbtn ${S.stars[MY_BARBER+':'+e.person]?'on':''}" data-a="star" data-id="${e.id}" aria-label="${t('star')}">${ic('star','ico',S.stars[MY_BARBER+':'+e.person]?'currentColor':'none')}</button>`:''}</div>`;
+    const st=S.stars[MY_BARBER+':'+e.person];
+    const row=`<div class="row" ${i?'':'style="min-height:52px"'}>${ap?`<span class="tm" dir="ltr">${e.time}</span>`:`<span class="num">${i+1}</span>`}<button class="nm" data-a="rowmenu" data-id="${e.id}" style="text-align:start">${ename(e)}</button>${stag(e,ap)}${isApp(e)&&e.person?`<button class="starbtn ${st?'on':''}" data-a="star" data-id="${e.id}" aria-label="${t('star')}">${ic('star','ico',st?'currentColor':'none')}</button>`:''}</div>`;
     if(i===0){const w=b.waitSince?Math.max(0,Math.round((Date.now()-b.waitSince)/60000)):null;
-      h+=`<div class="next"><div class="lbl" style="padding-top:8px">${t('nextUp')}</div>${row}<div class="three"><button data-a="wait" class="${w!==null?'act':''}">${t('wait')}</button><button data-a="shift" class="warnb">${t('shift')}</button><button data-a="skip">${t('skip')}</button></div>${w!==null?`<div class="waitnote">${t('waitingFor',{m:w})}</div>`:''}</div>`}
+      h+=`<div class="next"><div class="lbl" style="padding-top:8px">${t(ap?'nextUpAppt':'nextUp')}</div>${row}<div class="three"><button data-a="wait" class="${w!==null?'act':''}">${t('wait')}</button>${ap?'':`<button data-a="shift" class="warnb">${t('shift')}</button>`}<button data-a="skip">${t('skip')}</button></div>${w!==null?`<div class="waitnote">${t('waitingFor',{m:w})}</div>`:''}</div>`}
     else h+=row;
   });
   const nb=b.blocked.length;
-  h+=`<button class="rule" data-a="ressheet">${ic('star','ico')}<span class="grow"><b>${t('resToday')} · ${b.resOn?t('resOnL'):t('resOffL')}${b.resOn&&nb?' · '+t('blockedN',{n:nb}):''}</b><br>${t('starInfo')}</span>${ic('chev','ico flip')}</button>`;
+  h+=`<button class="rule" data-a="ressheet">${ic('star','ico')}<span class="grow"><b>${t('resToday')} · ${b.resOn?t('resOnL'):t('resOffL')}${b.resOn&&nb?' · '+t('blockedN',{n:nb}):''}</b><br>${t(ap?'starInfoAppt':'starInfo')}</span>${ic('chev','ico flip')}</button>`;
   return h;
 }
 function barberBar(b){const nx=b.queue[0];const sub=nx?t('nextSub',{n:ename(nx)}):(b.chair?t('finishSub'):'');
@@ -358,72 +412,96 @@ function barberShop(){
   let h=`<div class="card" style="display:flex;gap:12px;align-items:center"><img src="icons/icon-192.png" alt="" style="width:56px;height:56px;border-radius:14px"><div class="grow"><div style="font-size:18px;font-weight:800">${t('shopName')}</div><div class="muted">${t('shopAddr')}</div><div class="muted">${t('hours')}</div></div></div>`;
   h+=`<div class="h2">${t('barbersH')}</div><div class="card list" style="padding:0 12px">`;
   for(const k in BARBERS)h+=`<div class="li"><span class="av ${k===MY_BARBER?'dark':''}">${bname(k).charAt(0)}</span><span class="grow">${bname(k)}${k===MY_BARBER?` <span class="muted">(${t('you')})</span>`:''}<div class="muted">${barberLine(k)}</div></span></div>`;
-  h+=`</div>`+demoBlock('toClient');return h}
+  h+=`</div>`+settingsBlock(hb())+demoBlock('toClient');return h}
+function settingsBlock(b){const ap=b.mode==='appt',on=ap||b.approve,info='class="muted" style="margin:8px 0 0;line-height:1.55"';
+  let h=`<div class="h2">${t('settings')}</div><div class="card"><div class="muted" style="margin-bottom:8px">${t('workMode')}</div><div class="seg"><button class="${ap?'':'on'}" data-a="setmode" data-v="queue">${t('modeQueue')}</button><button class="${ap?'on':''}" data-a="setmode" data-v="appt">${t('modeAppt')}</button></div><p ${info}>${t(ap?'modeApptInfo':'modeQueueInfo')} ${t('modeDemo')}</p>`;
+  if(ap)h+=`<div class="muted" style="margin:16px 0 0">${t('apptLen')}</div><div class="chips">${[[30,'min30'],[45,'min45'],[60,'h1'],[90,'h130']].map(x=>`<button class="${b.slotLen===x[0]?'on':''}" data-a="setlen" data-v="${x[0]}">${t(x[1])}</button>`).join('')}</div>`;
+  h+=`<div class="muted" style="margin:16px 0 8px">${t('approveL')}</div><div class="seg"><button class="${on?'on':''}" ${ap?'':'data-a="setapprove" data-v="1"'}>${t('yes')}</button><button class="${on?'':'on'}" ${ap?'style="opacity:.4"':'data-a="setapprove" data-v="0"'}>${t('no')}</button></div><p ${info}>${t(ap?'approveAlways':'approveInfo')}</p></div>`;
+  return h}
 function demoBlock(sw){return `<div class="h2">${t('demo')}</div><div class="card"><div class="muted" style="margin-bottom:8px">${t('language')}</div><div class="seg"><button class="${S.lang==='ar'?'on':''}" data-a="setlang" data-v="ar">العربية</button><button class="${S.lang==='fr'?'on':''}" data-a="setlang" data-v="fr">Français</button></div>
   <button class="btn dark" data-a="mode">${ic('swap')}${t(sw)}</button><button class="btn line" data-a="resetsheet">${ic('reset')}${t('reset')}</button></div>`}
 
-function salonsList(){let best=null;for(const k in S.barbers){const b=S.barbers[k];if(b.status!=='open')continue;const n=b.queue.length+(b.chair?1:0);if(best===null||n<best)best=n}
+function salonsList(){let best=null;for(const k in S.barbers){const b=S.barbers[k];if(b.status!=='open'||b.mode==='appt')continue;const n=b.queue.length+(b.chair?1:0);if(best===null||n<best)best=n}
   const r=range(best||0);
-  return `<button class="card" data-a="openshop" style="display:flex;gap:12px;align-items:center;width:100%;text-align:start"><img src="icons/icon-192.png" alt="" style="width:56px;height:56px;border-radius:14px"><span class="grow"><span style="display:block;font-size:18px;font-weight:800">${t('shopName')}</span><span class="muted" style="display:block">${t('shopAddr')} · ${t('barbersN')}</span><span style="display:block;font-size:13px;font-weight:700;color:var(--ok);margin-top:2px">${t('shortest',r)}</span></span>${ic('chev','ico flip')}</button>`}
+  return `<button class="card" data-a="openshop" style="display:flex;gap:12px;align-items:center;width:100%;text-align:start"><img src="icons/icon-192.png" alt="" style="width:56px;height:56px;border-radius:14px"><span class="grow"><span style="display:block;font-size:18px;font-weight:800">${t('shopName')}</span><span class="muted" style="display:block">${t('shopAddr')} · ${t('barbersN')}</span><span style="display:block;font-size:13px;font-weight:700;color:var(--ok);margin-top:2px">${best===null?t('apptOnly'):t('shortest',r)}</span></span>${ic('chev','ico flip')}</button>`}
 function shopPage(){
+  const c=me();
   let h=`<button class="back" data-a="closeshop">${ic('back','ico flip')}${t('mySalons')}</button><div class="muted">${t('shopAddr')} · ${t('hours')}</div><div class="muted" style="margin-top:2px">${ic('clock','ico" style="width:14px;height:14px;vertical-align:-2px')} ${t('updated')}</div>`;
-  for(const k in S.barbers){const b=S.barbers[k];const n=b.queue.length;const tot=n+(b.chair?1:0);const r=range(tot);
-    h+=`<div class="card bcard"><div class="hd"><span class="av">${bname(k).charAt(0)}</span><span class="grow" style="font-size:18px;font-weight:800">${bname(k)}</span>${b.status==='pause'?`<span class="chip warn">${ic('pause')}${hhmm(b.pauseUntil)}</span>`:b.status==='closed'?`<span class="chip danger">${t('closed')}</span>`:''}</div>`;
+  for(const k in S.barbers){const b=S.barbers[k],ap=b.mode==='appt';const n=b.queue.length;const tot=n+(b.chair?1:0);const r=range(tot);
+    h+=`<div class="card bcard"><div class="hd"><span class="av">${bname(k).charAt(0)}</span><span class="grow" style="font-size:18px;font-weight:800">${bname(k)}</span>${ap?`<span class="tag t-res">${t('apptOnly')}</span>`:''}${b.status==='pause'?`<span class="chip warn">${ic('pause')}${hhmm(b.pauseUntil)}</span>`:b.status==='closed'?`<span class="chip danger">${t('closed')}</span>`:''}</div>`;
     if(b.status==='pause'){h+=`<div class="est" style="margin-top:12px">${t('comeBack',{t:hhmm(b.pauseUntil)})}</div></div>`;continue}
-    h+=`<div class="count"><b>${n}</b><span class="muted" style="font-size:15px">${t('waiting',{n:''}).trim()}</span></div><div class="est">${t('estLabel')} <b>${t('estimate',r)}</b></div>`;
-    const p=S.my.barber===k?myPos():null;
+    if(ap){const fs=b.resOn?apptSlots(k,1):[];h+=`<div class="count"><b>${n}</b><span class="muted" style="font-size:15px">${t('apptsN',{n:''}).trim()}</span></div><div class="est">${fs.length?t('nextFree',{t:`<b dir="ltr">${fs[0]}</b>`}):t('noSlots')}</div>`}
+    else h+=`<div class="count"><b>${n}</b><span class="muted" style="font-size:15px">${t('waiting',{n:''}).trim()}</span></div><div class="est">${t('estLabel')} <b>${t('estimate',r)}</b></div>`;
+    const p=c.barber===k?myPos():null,rq=c.req&&c.req.barber===k?c.req:null;
     if(b.status==='closed')h+=`<div class="banner danger">${ic('lock')}<span class="grow">${t('closedToday')}</span></div>`;
-    else if(p)h+=`<div class="banner info"><span class="grow">${p.chair?t('yourTurn'):t('inThis',{p:p.index+1})}</span><button data-a="gomyq">${t('seeMine')}</button></div>`;
-    else if(S.my.barber&&S.my.entry)h+=`<p class="muted" style="margin:10px 0 0">${t('inOther',{n:bname(S.my.barber)})}</p><button class="btn light" data-a="gomyq">${t('seeMine')}</button>`;
-    else{h+=`<button class="btn accent" data-a="joinsheet" data-b="${k}">${t('join')}</button>`;
-      if(S.stars[k+':'+ME]){const head=`<div class="resv"><div style="font-weight:800">${ic('star','ico" style="color:var(--star);vertical-align:-4px','currentColor')} ${t('reserve')}</div>`;
-        if(!b.resOn)h+=head+`<div class="muted">${t('resOffClient',{n:bname(k)})}</div></div>`;
-        else{const slots=resSlots(k);if(ui.resB===k&&ui.resTime&&slots.indexOf(ui.resTime)<0)ui.resTime=null;const pick=ui.resB===k?ui.resTime:null;
-          h+=head+`<div class="muted">${t('regularsOnly',{n:bname(k)})}</div>`;
-          if(!slots.length)h+=`<div class="muted" style="margin-top:8px;font-weight:700">${t('noSlots')}</div></div>`;
-          else h+=`<div class="rule" style="margin-top:6px">${ic('info','ico')}<span>${t('afterLine')}</span></div><div class="chips">${slots.map(s=>`<button class="${pick===s?'on':''}" data-a="pickres" data-b="${k}" data-v="${s}">${s}</button>`).join('')}</div>${pick?`<button class="btn dark" data-a="reserve" data-b="${k}">${t('confirm')} · ${pick}</button>`:`<div class="muted" style="margin-top:8px">${t('pickTime')}</div>`}</div>`}}}
+    else if(p)h+=`<div class="banner info"><span class="grow">${p.chair?t('yourTurn'):ap?t('inThisAppt',{t:b.queue[p.index].time}):t('inThis',{p:p.index+1})}</span><button data-a="gomyq">${t('seeMine')}</button></div>`;
+    else if(rq)h+=`<div class="banner info"><span class="grow">${t('reqPending',{t:rq.time,n:bname(k)})}</span><button data-a="cancelreq">${t('cancelReq')}</button></div>`;
+    else if((c.barber&&c.entry)||c.req)h+=`<p class="muted" style="margin:10px 0 0">${t('inOther',{n:bname(c.barber||c.req.barber)})}</p><button class="btn light" data-a="gomyq">${t('seeMine')}</button>`;
+    else{if(!ap)h+=`<button class="btn accent" data-a="joinsheet" data-b="${k}">${t('join')}</button>`;
+      if(ap||S.stars[k+':'+S.me])h+=resBlock(k,b,ap)}
     h+=`</div>`}
   return h}
-const OPEN_H=9,CLOSE_H=21;
+function resBlock(k,b,ap){
+  const ask=ap||b.approve,head=`<div class="resv"><div style="font-weight:800">${ic('star','ico" style="color:var(--star);vertical-align:-4px','currentColor')} ${t(ap?'askTime':'reserve')}</div>`;
+  if(!b.resOn)return head+`<div class="muted">${t(ap?'apptOffClient':'resOffClient',{n:bname(k)})}</div></div>`;
+  const slots=ap?apptSlots(k,8):resSlots(k);if(ui.resB===k&&ui.resTime&&slots.indexOf(ui.resTime)<0)ui.resTime=null;const pick=ui.resB===k?ui.resTime:null;
+  let h=head+`<div class="muted">${ap?'':t('regularsOnly',{n:bname(k)})+' '}${ask?t('askInfo',{n:bname(k)}):''}</div>`;
+  if(!slots.length)return h+`<div class="muted" style="margin-top:8px;font-weight:700">${t('noSlots')}</div></div>`;
+  return h+`${ap?'':`<div class="rule" style="margin-top:6px">${ic('info','ico')}<span>${t('afterLine')}</span></div>`}<div class="chips">${slots.map(x=>`<button class="${pick===x?'on':''}" data-a="pickres" data-b="${k}" data-v="${x}" dir="ltr">${x}</button>`).join('')}</div>${pick?`<button class="btn dark" data-a="reserve" data-b="${k}">${ask?t('askBtn',{t:pick}):t('confirm')+' · '+pick}</button>`:`<div class="muted" style="margin-top:8px">${t('pickTime')}</div>`}</div>`}
 function dayAt(h){const d=new Date(Date.now());d.setHours(h,0,0,0);return d.getTime()}
 function resList(b){return b.queue.filter(e=>e.src==='res')}
 // Reservation rule: slots start after the current line would be done (20 min per person, at least 45 min),
 // stop 30 min before closing, and skip the hours the barber blocked and the times already taken.
 function resSlots(k){const b=S.barbers[k],n=b.queue.length+(b.chair?1:0),last=dayAt(CLOSE_H)-30*60000,taken={};
-  resList(b).concat(b.chair&&b.chair.src==='res'?[b.chair]:[]).forEach(e=>{taken[e.time]=1});
+  resList(b).concat(b.requests,b.chair&&b.chair.src==='res'?[b.chair]:[]).forEach(e=>{taken[e.time]=1});
   const s=[];for(let ts=roundUp(Date.now()+Math.max(45,n*20)*60000,30);ts<=last&&s.length<4;ts+=30*60000){const hr=new Date(ts).getHours();if(hr<OPEN_H||b.blocked.indexOf(hr)>=0||taken[hhmm(ts)])continue;s.push(hhmm(ts))}
   return s}
+// Rendez-vous mode: a grid of slots of the barber's chosen length, from opening to closing.
+// A slot is free if it is at least 10 min away, touches no blocked hour and overlaps no booking or pending request.
+function apptSlots(k,max){const b=S.barbers[k],L=b.slotLen*60000,min=Date.now()+10*60000,end=dayAt(CLOSE_H),busy=b.queue.concat(b.requests,b.chair?[b.chair]:[]).filter(e=>e.ts),out=[];
+  for(let ts=dayAt(OPEN_H);ts+L<=end&&out.length<(max||8);ts+=L){if(ts<min)continue;
+    let ok=true;for(let x=ts;x<ts+L;x+=30*60000)if(b.blocked.indexOf(new Date(x).getHours())>=0)ok=false;
+    if(ok&&!busy.some(e=>ts<e.ts+e.len*60000&&e.ts<ts+L))out.push(hhmm(ts))}
+  return out}
+function placeEntry(b,e){if(b.mode==='appt'){let i=b.queue.findIndex(x=>x.ts>e.ts);if(i<0)i=b.queue.length;b.queue.splice(i,0,e)}else b.queue.push(e)}
 function blockHours(){const h=[];for(let x=Math.max(OPEN_H,new Date(Date.now()).getHours());x<CLOSE_H;x++)h.push(x);return h}
 function myQueue(){
-  const p=myPos();
-  if(!p){let h='';if(S.my.skippedBy)h+=`<div class="banner warn">${ic('info')}<span class="grow">${t('skippedMsg',{n:bname(S.my.skippedBy)})}</span></div>`;
-    if(S.my.removedBy)h+=`<div class="banner warn">${ic('info')}<span class="grow">${S.my.removedRes?t('cancelledRes',{n:bname(S.my.removedBy),t:S.my.removedRes}):t('removedMsg',{n:bname(S.my.removedBy)})}</span></div>`;
-    return h+`<div class="empty">${ic('ticket','ico" style="width:48px;height:48px;color:var(--line)')}<div style="margin-top:8px;font-weight:700;color:var(--ink)">${t('notInQueue')}</div></div><button class="btn accent" data-a="gosalons">${S.my.skippedBy||S.my.removedBy?t('rejoin'):t('seeSalons')}</button>`}
-  const k=S.my.barber,b=S.barbers[k];
+  const p=myPos(),c=me();
+  if(!p){let h='';
+    if(c.msg)h+=`<div class="banner warn">${ic('info')}<span class="grow">${t(c.msg.k,{n:bname(c.msg.n),t:c.msg.t||''})}</span></div>`;
+    if(c.req)return h+`<div class="card"><div class="muted">${t('shopName')} · ${bname(c.req.barber)}</div><div class="pos" style="margin-top:10px"><div class="n tmn" dir="ltr">${c.req.time}</div><div><div style="font-size:18px;font-weight:800">${t('reqWait')}</div><div class="muted">${t('askInfo',{n:bname(c.req.barber)})}</div></div></div></div><button class="btn danger" data-a="cancelreq">${t('cancelReq')}</button>`;
+    return h+`<div class="empty">${ic('ticket','ico" style="width:48px;height:48px;color:var(--line)')}<div style="margin-top:8px;font-weight:700;color:var(--ink)">${t('notInQueue')}</div></div><button class="btn accent" data-a="gosalons">${c.msg?t('rejoin'):t('seeSalons')}</button>`}
+  const k=c.barber,b=S.barbers[k],ap=b.mode==='appt';
   let h='';
   if(p.chair)h+=`<div class="card" style="background:var(--ink);color:#fff;border:0"><div class="pos"><div class="n acc">${ic('star','ico" style="width:36px;height:36px','currentColor')}</div><div><div style="font-size:24px;font-weight:800">${t('yourTurn')}</div><div style="color:var(--onDarkMut);font-size:14px">${t('yourTurnSub',{n:bname(k)})}</div></div></div></div>`;
-  else{const e=b.queue[p.index];const r=range(p.ahead);
-    h+=`<div class="card"><div class="muted">${t('shopName')} · ${bname(k)}</div><div class="pos" style="margin-top:10px"><div class="n">${p.index+1}</div><div><div class="muted">${t('yourPos')}</div><div style="font-size:18px;font-weight:800">${p.ahead===0?t('ahead0'):p.ahead===1?t('ahead1'):t('ahead',{n:p.ahead})}</div>${p.ahead?`<div style="font-size:15px;font-weight:700;color:var(--star);margin-top:2px">${t('estimate',r)}</div>`:''}${e.src==='res'?`<div class="muted">${t('resAt',{t:e.time})}</div>`:''}</div></div><div class="rule">${ic('info','ico')}<span>${t('rule')}</span></div></div>`}
+  else{const e=b.queue[p.index];const r=range(p.ahead);const ah=p.ahead===0?t('ahead0'):p.ahead===1?t('ahead1'):t('ahead',{n:p.ahead});
+    if(ap)h+=`<div class="card"><div class="muted">${t('shopName')} · ${bname(k)}</div><div class="pos" style="margin-top:10px"><div class="n tmn" dir="ltr">${e.time}</div><div><div class="muted">${t('yourAppt')}</div><div style="font-size:18px;font-weight:800">${ah}</div></div></div><div class="rule">${ic('info','ico')}<span>${t('rule')}</span></div></div>`;
+    else h+=`<div class="card"><div class="muted">${t('shopName')} · ${bname(k)}</div><div class="pos" style="margin-top:10px"><div class="n">${p.index+1}</div><div><div class="muted">${t('yourPos')}</div><div style="font-size:18px;font-weight:800">${ah}</div>${p.ahead?`<div style="font-size:15px;font-weight:700;color:var(--star);margin-top:2px">${t('estimate',r)}</div>`:''}${e.src==='res'?`<div class="muted">${t('resAt',{t:e.time})}</div>`:''}</div></div><div class="rule">${ic('info','ico')}<span>${t('rule')}</span></div></div>`}
   h+=`<div class="h2">${t('theLine',{n:bname(k)})} <span class="muted" style="font-weight:500">· ${t('updated')}</span></div><div class="card line" style="padding:8px">`;
   h+=`<div class="li ${p.chair?'me':''}"><span class="num" style="background:var(--ink);color:#fff">${ic('user','ico" style="width:16px;height:16px')}</span><span class="grow">${b.chair?(p.chair?t('youTag'):t('inChair')):t('chairFree')}</span></div>`;
-  b.queue.forEach((e,i)=>{const me=e.id===S.my.entry;h+=`<div class="li ${me?'me':''}"><span class="num">${i+1}</span><span class="grow">${me?t('youTag'):''}</span>${stag(e)}</div>`});
+  b.queue.forEach((e,i)=>{const mine=e.id===c.entry;h+=`<div class="li ${mine?'me':''}">${ap?`<span class="tm" dir="ltr">${e.time}</span>`:`<span class="num">${i+1}</span>`}<span class="grow">${mine?t('youTag'):''}</span>${stag(e,ap)}</div>`});
   h+=`</div>`;
-  if(!p.chair)h+=`<button class="btn danger" data-a="leavesheet">${t('leave')}</button>`;
+  if(!p.chair)h+=`<button class="btn danger" data-a="leavesheet">${t(ap?'cancelAppt':'leave')}</button>`;
   return h}
-function clientProfile(){return `<div class="card" style="display:flex;gap:12px;align-items:center"><span class="av dark">${pname(ME).charAt(0)}</span><div><div style="font-size:18px;font-weight:800">${pname(ME)}</div><div class="muted" dir="ltr" style="text-align:start">${t('phone')}</div></div></div>`+demoBlock('toBarber')}
+function clientProfile(){return `<div class="card" style="display:flex;gap:12px;align-items:center"><span class="av dark">${pname(S.me).charAt(0)}</span><div><div style="font-size:18px;font-weight:800">${pname(S.me)}</div><div class="muted" dir="ltr" style="text-align:start">${t('phone')}</div></div></div>
+  <div class="h2">${t('demoClient')}</div><div class="card"><div class="seg">${CLIENTS.map(k=>`<button class="${S.me===k?'on':''}" data-a="setme" data-v="${k}">${pname(k)}</button>`).join('')}</div><p class="muted" style="margin:8px 0 0;line-height:1.55">${t('demoClientInfo')}</p></div>`+demoBlock('toBarber')}
 
 function renderLayer(){
   let h='';const s=ui.sheet;
   if(s){h+=`<div class="scrim" data-a="closesheet"><div class="sheet" data-stop="1"><div class="grab"></div>${sheetBody(s)}</div></div>`}
   if(ui.toast&&!s)h+=`<div class="toast"><span class="grow">${ui.toast.msg}</span>${ui.toast.undo?`<button data-a="undo">${t('undo')}</button>`:''}</div>`;
-  if(ui.notif)h+=`<button class="notif" data-a="notiftap"><img src="icons/icon-192.png" alt=""><span class="grow"><b>Salooni · ${t('soon')}</b><span>${ui.notif}</span></span></button>`;
+  if(ui.notif)h+=`<button class="notif" data-a="notiftap"><img src="icons/icon-192.png" alt=""><span class="grow"><b>Salooni · ${ui.notif.title}</b><span>${ui.notif.msg}</span></span></button>`;
   document.getElementById('layer').innerHTML=h;
   const te=document.querySelector('.toast');if(te){const bb=document.getElementById('bar').offsetHeight,tb=document.getElementById('tabs').offsetHeight;te.style.bottom=(bb+tb+10)+'px'}
-  if(S.mode==='client'&&S.my.alertPending){S.my.alertPending=false;save();const p=myPos();if(p&&!p.chair){showNotif(t('soonMsg',{k:p.ahead===1?t('one'):t('two'),n:bname(S.my.barber)}))}}
+  if(S.mode==='client'){const c=me();
+    if(c.alertPending){c.alertPending=false;save();const p=myPos();if(p&&!p.chair)showNotif(t('soon'),t('soonMsg',{k:p.ahead===1?t('one'):t('two'),n:bname(c.barber)}))}
+    else if(c.flash){const f=c.flash;c.flash=null;save();showNotif(t(f.k+'T'),t(f.k==='reqAccepted'?'reqAcceptedM':'refusedMsg',{n:bname(f.n),t:f.t}))}}
   if(s&&s.type==='add'){const f=document.getElementById('nameField');if(f&&s.focus){/* no autofocus: keeps it two taps */}}
 }
 function sheetBody(s){
   const b=S.barbers[MY_BARBER];
+  if(s.type==='add'&&b.mode==='appt'){const sl=apptSlots(MY_BARBER,8);if(ui.addTime&&sl.indexOf(ui.addTime)<0)ui.addTime=null;
+    return `<h3>${t('addApptTitle')}</h3><p>${t('addHint')}</p><input id="nameField" class="field" placeholder="${t('namePh')}" value="${esc(s.name||'')}" autocomplete="off">${sl.length?`<p>${t('pickTime')}</p><div class="chips">${sl.map(x=>`<button class="${ui.addTime===x?'on':''}" data-a="pickadd" data-v="${x}" dir="ltr">${x}</button>`).join('')}</div>`:`<p style="font-weight:700">${t('noSlots')}</p>`}<div class="tiles ${ui.addTime?'':'dim'}"><button data-a="addwalk">${ic('walk','')}${t('onSite')}</button><button data-a="addcall">${ic('phone','')}${t('onPhone')}</button></div><button class="btn light" data-a="closesheet">${t('cancel')}</button>`}
   if(s.type==='add')return `<h3>${t('addTitle')}</h3><p>${t('addHint')}</p><input id="nameField" class="field" placeholder="${t('namePh')}" autocomplete="off"><div class="tiles"><button data-a="addwalk">${ic('walk','')}${t('onSite')}</button><button data-a="addcall">${ic('phone','')}${t('onPhone')}</button></div><button class="btn light" data-a="closesheet">${t('cancel')}</button>`;
   if(s.type==='row'){const e=b.queue.find(x=>x.id===s.id);if(!e)return'';const st=S.stars[MY_BARBER+':'+e.person];
     return `<h3>${ename(e)}</h3><div style="margin-top:6px">${stag(e)}</div>${isApp(e)?`<button class="btn line" data-a="star" data-id="${e.id}">${ic('star','ico',st?'currentColor':'none')}${st?t('unstar'):t('star')}</button>`:''}<button class="btn danger" data-a="remove" data-id="${e.id}">${t('remove')}</button><button class="btn light" data-a="closesheet">${t('cancel')}</button>`}
@@ -444,9 +522,12 @@ function sheetBody(s){
 
 let toastTimer,notifTimer;
 function toast(msg,undo){ui.toast={msg,undo:!!undo};clearTimeout(toastTimer);toastTimer=setTimeout(()=>{ui.toast=null;renderLayer()},undo?5000:3000)}
-function showNotif(msg){ui.notif=msg;clearTimeout(notifTimer);if(navigator.vibrate)try{navigator.vibrate(200)}catch(e){}notifTimer=setTimeout(()=>{ui.notif=null;renderLayer()},7000);renderLayer()}
+function showNotif(title,msg){ui.notif={title,msg};clearTimeout(notifTimer);if(navigator.vibrate)try{navigator.vibrate(200)}catch(e){}notifTimer=setTimeout(()=>{ui.notif=null;renderLayer()},7000);renderLayer()}
 function newId(){return ++S.nextId}
 
+function ownerOf(id){for(const k in S.cl)if(S.cl[k].entry===id)return k;return null}
+function release(e,x){const k=ownerOf(e.id);if(k)S.cl[k]=blank(x)}
+function takeReq(d){const b=hb(),i=b.requests.findIndex(x=>x.id==d.id);if(i<0)return null;snapshot();return b.requests.splice(i,1)[0]}
 const A={
  tab(d){S[d.g]=d.v;if(d.g==='ctab')S.cview='list';ui.resTime=null},
  lang(){S.lang=S.lang==='ar'?'fr':'ar'},
@@ -454,41 +535,57 @@ const A={
  mode(){S.mode=S.mode==='barber'?'client':'barber';ui.sheet=null;ui.toast=null;ui.undo=null},
  qmenu(){ui.sheet={type:'qmenu'}},
  ressheet(){ui.sheet={type:'res'}},
- reson(d){S.barbers[MY_BARBER].resOn=d.v==='1'},
- blockhour(d){const bl=S.barbers[MY_BARBER].blocked,x=+d.v,i=bl.indexOf(x);if(i>=0)bl.splice(i,1);else bl.push(x)},
+ reson(d){hb().resOn=d.v==='1'},
+ blockhour(d){const bl=hb().blocked,x=+d.v,i=bl.indexOf(x);if(i>=0)bl.splice(i,1);else bl.push(x)},
  closesheet(){ui.sheet=null},
- addsheet(){ui.sheet={type:'add'}},
+ addsheet(){ui.addTime=null;ui.sheet={type:'add'}},
+ pickadd(d){const f=document.getElementById('nameField');ui.sheet.name=f?f.value:'';ui.addTime=d.v},
  addwalk(){addEntry('walk')},addcall(){addEntry('call')},
- next(){const b=S.barbers[MY_BARBER];if(!b.chair&&!b.queue.length){toast(t('nobody'));return}snapshot();
-   if(b.chair){S.stats.cuts++;if(isApp(b.chair))S.stats.app++;b.last=b.chair;if(b.chair.person===ME&&S.my.barber===MY_BARBER){S.my={barber:null,entry:null,alerted:false,skippedBy:null}}}
+ next(){const b=hb();if(!b.chair&&!b.queue.length){toast(t('nobody'));return}snapshot();
+   if(b.chair){S.stats.cuts++;if(isApp(b.chair))S.stats.app++;b.last=b.chair;release(b.chair)}
    const nx=b.queue.shift();b.waitSince=null;
    if(nx){b.chair=nx;b.chairSince=Date.now();toast(t('served',{n:ename(nx)}),true)}else{b.chair=null;b.chairSince=null;toast(t('cutDone'),true)}},
- wait(){const b=S.barbers[MY_BARBER];if(!b.queue.length)return;b.waitSince=b.waitSince?null:Date.now();if(b.waitSince)toast(t('waitingT',{n:ename(b.queue[0])}))},
- shift(){const b=S.barbers[MY_BARBER];if(b.queue.length<2){toast(t('cantShift'));return}snapshot();const e=b.queue.shift();b.queue.splice(Math.min(1,b.queue.length),0,e);b.waitSince=null;toast(t('shifted',{n:ename(e)}),true)},
- skip(){const b=S.barbers[MY_BARBER];if(!b.queue.length)return;snapshot();const e=b.queue.shift();b.waitSince=null;S.stats.skips++;if(e.id===S.my.entry){S.my={barber:null,entry:null,alerted:false,skippedBy:MY_BARBER}}toast(t('skipped',{n:ename(e)}),true)},
- star(d){const b=S.barbers[MY_BARBER];const e=b.queue.find(x=>x.id==d.id);if(!e||!e.person)return;const k=MY_BARBER+':'+e.person;if(S.stars[k]){delete S.stars[k];toast(t('unstarred',{n:ename(e)}))}else{S.stars[k]=true;toast(t('starred',{n:ename(e)}))}ui.sheet=null},
+ wait(){const b=hb();if(!b.queue.length)return;b.waitSince=b.waitSince?null:Date.now();if(b.waitSince)toast(t('waitingT',{n:ename(b.queue[0])}))},
+ shift(){const b=hb();if(b.mode==='appt')return;if(b.queue.length<2){toast(t('cantShift'));return}snapshot();const e=b.queue.shift();b.queue.splice(Math.min(1,b.queue.length),0,e);b.waitSince=null;toast(t('shifted',{n:ename(e)}),true)},
+ skip(){const b=hb();if(!b.queue.length)return;snapshot();const e=b.queue.shift();b.waitSince=null;S.stats.skips++;release(e,{msg:{k:'skippedMsg',n:MY_BARBER}});toast(t('skipped',{n:ename(e)}),true)},
+ star(d){const b=hb();const e=b.queue.find(x=>x.id==d.id);if(!e||!e.person)return;const k=MY_BARBER+':'+e.person;if(S.stars[k]){delete S.stars[k];toast(t('unstarred',{n:ename(e)}))}else{S.stars[k]=true;toast(t('starred',{n:ename(e)}))}ui.sheet=null},
  rowmenu(d){ui.sheet={type:'row',id:+d.id}},
- remove(d){const b=S.barbers[MY_BARBER];const i=b.queue.findIndex(x=>x.id==d.id);if(i<0)return;snapshot();const e=b.queue.splice(i,1)[0];if(i===0)b.waitSince=null;if(e.id===S.my.entry)S.my={barber:null,entry:null,alerted:false,skippedBy:null,removedBy:MY_BARBER,removedRes:e.src==='res'?e.time:null};ui.sheet=null;toast(t('removed',{n:ename(e)}),true)},
- pause(d){const b=S.barbers[MY_BARBER];b.status='pause';b.pauseUntil=roundUp(Date.now()+(+d.v)*60000,5);ui.sheet=null},
- resume(){const b=S.barbers[MY_BARBER];b.status='open';b.pauseUntil=null;ui.sheet=null},
- close(){S.barbers[MY_BARBER].status='closed';S.barbers[MY_BARBER].pauseUntil=null;ui.sheet=null},
- reopen(){S.barbers[MY_BARBER].status='open';ui.sheet=null},
+ remove(d){const b=hb();const i=b.queue.findIndex(x=>x.id==d.id);if(i<0)return;snapshot();const e=b.queue.splice(i,1)[0];if(i===0)b.waitSince=null;release(e,{msg:{k:e.src==='res'?'cancelledRes':'removedMsg',n:MY_BARBER,t:e.time}});ui.sheet=null;toast(t('removed',{n:ename(e)}),true)},
+ accept(d){const e=takeReq(d);if(!e)return;placeEntry(hb(),e);const c=S.cl[e.person];if(c&&c.req&&c.req.id===e.id)S.cl[e.person]=blank({barber:MY_BARBER,entry:e.id,flash:{k:'reqAccepted',n:MY_BARBER,t:e.time}});toast(t('accepted',{n:ename(e),t:e.time}),true)},
+ refuse(d){const e=takeReq(d);if(!e)return;const c=S.cl[e.person];if(c&&c.req&&c.req.id===e.id)S.cl[e.person]=blank({msg:{k:'refusedMsg',n:MY_BARBER,t:e.time},flash:{k:'reqRefused',n:MY_BARBER,t:e.time}});toast(t('refused',{n:ename(e)}),true)},
+ setmode(d){const b=hb();if(b.mode===d.v)return;b.mode=d.v;const hs=hamidSample(d.v,b.slotLen,Date.now());b.queue=hs.queue;b.requests=hs.requests;b.chair=null;b.chairSince=null;b.waitSince=null;
+   for(const k in hs.cl){const c=S.cl[k];if(!((c.barber&&c.barber!==MY_BARBER)||(c.req&&c.req.barber!==MY_BARBER)))S.cl[k]=hs.cl[k]}
+   ui.undo=null;ui.resTime=null;toast(t('modeChanged'))},
+ setlen(d){hb().slotLen=+d.v},
+ setapprove(d){hb().approve=d.v==='1'},
+ setme(d){S.me=d.v;ui.resTime=null;S.cview='list'},
+ pause(d){const b=hb();b.status='pause';b.pauseUntil=roundUp(Date.now()+(+d.v)*60000,5);ui.sheet=null},
+ resume(){const b=hb();b.status='open';b.pauseUntil=null;ui.sheet=null},
+ close(){hb().status='closed';hb().pauseUntil=null;ui.sheet=null},
+ reopen(){hb().status='open';ui.sheet=null},
  undo(){if(ui.undo){S=JSON.parse(ui.undo);ui.undo=null;ui.toast=null}},
  resetsheet(){ui.sheet={type:'reset'}},
  reset(){S=initial(S.lang,'barber');ui.sheet=null;ui.undo=null;ui.resTime=null;toast(t('resetDone'))},
  openshop(){S.cview='shop'},closeshop(){S.cview='list';ui.resTime=null},
- gomyq(){S.ctab='myq';S.cview='list'},gosalons(){S.ctab='salons';S.cview=S.my.skippedBy||S.my.removedBy?'shop':'list';S.my.skippedBy=null;S.my.removedBy=null;S.my.removedRes=null},
+ gomyq(){S.ctab='myq';S.cview='list'},gosalons(){const c=me();S.ctab='salons';S.cview=c.msg?'shop':'list';c.msg=null},
  joinsheet(d){ui.sheet={type:'join',b:d.b}},
- join(d){const b=S.barbers[d.b];if(b.status!=='open')return;const e={id:newId(),src:'app',person:ME};b.queue.push(e);S.my={barber:d.b,entry:e.id,alerted:false,skippedBy:null};ui.sheet=null;S.ctab='myq';S.cview='list';toast(t('joined',{n:bname(d.b)}))},
+ join(d){const b=S.barbers[d.b];if(b.status!=='open'||b.mode==='appt')return;const e={id:newId(),src:'app',person:S.me};b.queue.push(e);S.cl[S.me]=blank({barber:d.b,entry:e.id});ui.sheet=null;S.ctab='myq';S.cview='list';toast(t('joined',{n:bname(d.b)}))},
  pickres(d){ui.resTime=d.v;ui.resB=d.b},
- reserve(d){const b=S.barbers[d.b];if(!ui.resTime||ui.resB!==d.b)return;if(b.status!=='open'||!b.resOn||resSlots(d.b).indexOf(ui.resTime)<0){ui.resTime=null;toast(t('slotGone'));return}
-   /* A reservation always goes to the end of the line: it never passes anyone already waiting. */
-   const e={id:newId(),src:'res',person:ME,time:ui.resTime};b.queue.push(e);S.my={barber:d.b,entry:e.id,alerted:false,skippedBy:null};toast(t('reserved',{t:ui.resTime,n:bname(d.b)}));ui.resTime=null;S.ctab='myq';S.cview='list'},
+ reserve(d){const k=d.b,b=S.barbers[k],ap=b.mode==='appt';if(!ui.resTime||ui.resB!==k)return;
+   if(b.status!=='open'||!b.resOn||(ap?apptSlots(k,99):resSlots(k)).indexOf(ui.resTime)<0){ui.resTime=null;toast(t('slotGone'));return}
+   const e={id:newId(),src:'res',person:S.me,time:ui.resTime};if(ap){e.ts=tsOf(e.time);e.len=b.slotLen}
+   /* With approval (always in rendez-vous mode) the booking waits as a request. Otherwise it goes to the end of the line: it never passes anyone already waiting. */
+   if(ap||b.approve){b.requests.push(e);S.cl[S.me]=blank({req:{barber:k,id:e.id,time:e.time}});toast(t('reqSent',{n:bname(k),t:e.time}))}
+   else{b.queue.push(e);S.cl[S.me]=blank({barber:k,entry:e.id});toast(t('reserved',{t:e.time,n:bname(k)}))}
+   ui.resTime=null;S.ctab='myq';S.cview='list'},
+ cancelreq(){const c=me();if(c.req){const b=S.barbers[c.req.barber];b.requests=b.requests.filter(x=>x.id!==c.req.id)}S.cl[S.me]=blank();toast(t('reqCancelled'))},
  leavesheet(){ui.sheet={type:'leave'}},
- leave(){const m=S.my;if(m.barber){const b=S.barbers[m.barber];const i=b.queue.findIndex(x=>x.id===m.entry);if(i>=0){b.queue.splice(i,1);if(i===0)b.waitSince=null}}S.my={barber:null,entry:null,alerted:false,skippedBy:null};ui.sheet=null;toast(t('left'))},
+ leave(){const m=me();if(m.barber){const b=S.barbers[m.barber];const i=b.queue.findIndex(x=>x.id===m.entry);if(i>=0){b.queue.splice(i,1);if(i===0)b.waitSince=null}}S.cl[S.me]=blank();ui.sheet=null;toast(t('left'))},
  notiftap(){ui.notif=null;if(S.mode==='client'){S.ctab='myq';S.cview='list'}}
 };
-function addEntry(src){const f=document.getElementById('nameField');const name=f&&f.value.trim()?f.value.trim().slice(0,30):null;const b=S.barbers[MY_BARBER];snapshot();const e={id:newId(),src,name};b.queue.push(e);ui.sheet=null;toast(t('added',{n:ename(e),p:b.queue.length}),true)}
+function addEntry(src){const f=document.getElementById('nameField');const name=f&&f.value.trim()?f.value.trim().slice(0,30):null;const b=hb();
+  if(b.mode==='appt'){if(!ui.addTime){ui.sheet.name=f?f.value:'';return}snapshot();const e={id:newId(),src,name,time:ui.addTime,ts:tsOf(ui.addTime),len:b.slotLen};placeEntry(b,e);ui.sheet=null;ui.addTime=null;toast(t('addedAt',{n:ename(e),t:e.time}),true);return}
+  snapshot();const e={id:newId(),src,name};b.queue.push(e);ui.sheet=null;toast(t('added',{n:ename(e),p:b.queue.length}),true)}
 
 document.addEventListener('click',ev=>{
   const el=ev.target.closest('[data-a]');

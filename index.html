@@ -221,6 +221,7 @@ fr:{
  yourAppt:'Votre rendez-vous',inThisAppt:'Votre rendez-vous · {t}',cancelAppt:'Annuler mon rendez-vous',
  addApptTitle:'Ajouter un rendez-vous',addedAt:'{n} ajouté · {t}',
  demoClient:'Client de démo',demoClientInfo:'Chaque client a sa propre place et ses propres demandes.',
+ waitNowT:'Le coiffeur vous attend',waitNowM:'C\'est votre tour chez {n}. Venez maintenant.',waitBanner:'{n} vous attend depuis {m} min. Venez maintenant, sinon il peut vous passer.',waitTold:'Vous attendez {n} · il est prévenu',
  starInfoAppt:'Tout client peut demander une heure. Vous acceptez ou refusez.',nextUpAppt:'Prochain rendez-vous · s\'il n\'est pas là :'
 },
 ar:{
@@ -279,6 +280,7 @@ ar:{
  yourAppt:'موعدك',inThisAppt:'موعدك · {t}',cancelAppt:'إلغاء موعدي',
  addApptTitle:'إضافة موعد',addedAt:'تمت إضافة {n} · {t}',
  demoClient:'زبون العرض',demoClientInfo:'لكل زبون مكانه وطلباته الخاصة.',
+ waitNowT:'الحلاق في انتظارك',waitNowM:'حان دورك عند {n}. تعال الآن.',waitBanner:'{n} في انتظارك منذ {m} د. تعال الآن، وإلا قد يتخطاك.',waitTold:'أنت تنتظر {n} · تم إشعاره',
  starInfoAppt:'أي زبون يمكنه طلب ساعة. أنت تقبل أو ترفض.',nextUpAppt:'الموعد التالي · إذا لم يكن حاضراً:'
 }};
 
@@ -347,6 +349,7 @@ function isApp(e){return e.src==='app'||e.src==='res'}
 function snapshot(){ui.undo=JSON.stringify(S)}
 function checkTimers(){const now=Date.now();for(const k in S.barbers){const b=S.barbers[k];if(b.status==='pause'&&b.pauseUntil&&b.pauseUntil<=now){b.status='open';b.pauseUntil=null}}}
 function myPos(){const m=me();if(!m.barber||!m.entry)return null;const b=S.barbers[m.barber];if(b.chair&&b.chair.id===m.entry)return{chair:true};const i=b.queue.findIndex(e=>e.id===m.entry);if(i<0)return null;return{index:i,ahead:i+(b.chair?1:0)}}
+function awaited(){const p=myPos(),m=me();return !!(p&&!p.chair&&p.index===0&&S.barbers[m.barber].waitSince)}
 function checkAlert(){const p=myPos(),m=me();if(p&&!p.chair&&S.barbers[m.barber].mode!=='appt'&&p.ahead<=2&&p.ahead>0&&!m.alerted){m.alerted=true;m.alertPending=true}}
 
 function render(){
@@ -473,6 +476,7 @@ function myQueue(){
     return h+`<div class="empty">${ic('ticket','ico" style="width:48px;height:48px;color:var(--line)')}<div style="margin-top:8px;font-weight:700;color:var(--ink)">${t('notInQueue')}</div></div><button class="btn accent" data-a="gosalons">${c.msg?t('rejoin'):t('seeSalons')}</button>`}
   const k=c.barber,b=S.barbers[k],ap=b.mode==='appt';
   let h='';
+  if(awaited())h+=`<div class="banner danger" style="font-size:15px;font-weight:800;border:2px solid var(--danger)">${ic('clock')}<span class="grow">${t('waitBanner',{n:bname(k),m:Math.max(0,Math.round((Date.now()-b.waitSince)/60000))})}</span></div>`;
   if(p.chair)h+=`<div class="card" style="background:var(--ink);color:#fff;border:0"><div class="pos"><div class="n acc">${ic('star','ico" style="width:36px;height:36px','currentColor')}</div><div><div style="font-size:24px;font-weight:800">${t('yourTurn')}</div><div style="color:var(--onDarkMut);font-size:14px">${t('yourTurnSub',{n:bname(k)})}</div></div></div></div>`;
   else{const e=b.queue[p.index];const r=range(p.ahead);const ah=p.ahead===0?t('ahead0'):p.ahead===1?t('ahead1'):t('ahead',{n:p.ahead});
     if(ap)h+=`<div class="card"><div class="muted">${t('shopName')} · ${bname(k)}</div><div class="pos" style="margin-top:10px"><div class="n tmn" dir="ltr">${e.time}</div><div><div class="muted">${t('yourAppt')}</div><div style="font-size:18px;font-weight:800">${ah}</div></div></div><div class="rule">${ic('info','ico')}<span>${t('rule')}</span></div></div>`;
@@ -495,7 +499,7 @@ function renderLayer(){
   const te=document.querySelector('.toast');if(te){const bb=document.getElementById('bar').offsetHeight,tb=document.getElementById('tabs').offsetHeight;te.style.bottom=(bb+tb+10)+'px'}
   if(S.mode==='client'){const c=me();
     if(c.alertPending){c.alertPending=false;save();const p=myPos();if(p&&!p.chair)showNotif(t('soon'),t('soonMsg',{k:p.ahead===1?t('one'):t('two'),n:bname(c.barber)}))}
-    else if(c.flash){const f=c.flash;c.flash=null;save();showNotif(t(f.k+'T'),t(f.k==='reqAccepted'?'reqAcceptedM':'refusedMsg',{n:bname(f.n),t:f.t}))}}
+    else if(c.flash){const f=c.flash;c.flash=null;save();if(f.k!=='waitNow'||awaited())showNotif(t(f.k+'T'),t({reqAccepted:'reqAcceptedM',reqRefused:'refusedMsg',waitNow:'waitNowM'}[f.k],{n:bname(f.n),t:f.t}))}}
   if(s&&s.type==='add'){const f=document.getElementById('nameField');if(f&&s.focus){/* no autofocus: keeps it two taps */}}
 }
 function sheetBody(s){
@@ -545,7 +549,10 @@ const A={
    if(b.chair){S.stats.cuts++;if(isApp(b.chair))S.stats.app++;b.last=b.chair;release(b.chair)}
    const nx=b.queue.shift();b.waitSince=null;
    if(nx){b.chair=nx;b.chairSince=Date.now();toast(t('served',{n:ename(nx)}),true)}else{b.chair=null;b.chairSince=null;toast(t('cutDone'),true)}},
- wait(){const b=hb();if(!b.queue.length)return;b.waitSince=b.waitSince?null:Date.now();if(b.waitSince)toast(t('waitingT',{n:ename(b.queue[0])}))},
+ wait(){const b=hb();if(!b.queue.length)return;b.waitSince=b.waitSince?null:Date.now();const e=b.queue[0],k=ownerOf(e.id);
+   /* Tell the client he is being waited for: an alert when he opens the app, and a banner on Ma file while the barber waits. */
+   if(k)S.cl[k].flash=b.waitSince?{k:'waitNow',n:MY_BARBER}:null;
+   if(b.waitSince)toast(t(k?'waitTold':'waitingT',{n:ename(e)}))},
  shift(){const b=hb();if(b.mode==='appt')return;if(b.queue.length<2){toast(t('cantShift'));return}snapshot();const e=b.queue.shift();b.queue.splice(Math.min(1,b.queue.length),0,e);b.waitSince=null;toast(t('shifted',{n:ename(e)}),true)},
  skip(){const b=hb();if(!b.queue.length)return;snapshot();const e=b.queue.shift();b.waitSince=null;S.stats.skips++;release(e,{msg:{k:'skippedMsg',n:MY_BARBER}});toast(t('skipped',{n:ename(e)}),true)},
  star(d){const b=hb();const e=b.queue.find(x=>x.id==d.id);if(!e||!e.person)return;const k=MY_BARBER+':'+e.person;if(S.stars[k]){delete S.stars[k];toast(t('unstarred',{n:ename(e)}))}else{S.stars[k]=true;toast(t('starred',{n:ename(e)}))}ui.sheet=null},

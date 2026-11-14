@@ -38,6 +38,7 @@ Edit the files, change `VERSION` in `sw.js` (for example to `salooni-proto-v2`),
 | Open rule | Default in the prototype |
 |---|---|
 | Décaler (US-04) | Moves the next client back 1 place; tap again to move him further. Doesn't count as a miss. |
+| Attendre (US-04) | The barber sees how long he has waited. The client gets an alert ("Le coiffeur vous attend") and a red banner on *Ma file* until the barber moves on. |
 | Passer (US-04) | Removes the client and counts one absence (Statistiques). |
 | Alert (US-16) | Fires once, when 2 people are ahead, as an in-app notification. |
 | Wait range (US-15) | 15–20 min per person ahead, the person in the chair included. |

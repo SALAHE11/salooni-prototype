@@ -1,5 +1,5 @@
 // Bump VERSION after every change so phones pick up the new files.
-const VERSION = 'salooni-proto-v2';
+const VERSION = 'salooni-proto-v3';
 const ASSETS = [
   './', './index.html', './manifest.webmanifest',
   './icons/icon.svg', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png',

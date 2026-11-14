@@ -35,7 +35,7 @@ Edit the files, change `VERSION` in `sw.js` (for example to `salooni-proto-v2`),
 
 | Open rule | Default in the prototype |
 |---|---|
-| Décaler (US-04) | Moves the next client back 2 places. Doesn't count as a miss. |
+| Décaler (US-04) | Moves the next client back 1 place; tap again to move him further. Doesn't count as a miss. |
 | Passer (US-04) | Removes the client and counts one absence (Statistiques). |
 | Alert (US-16) | Fires once, when 2 people are ahead, as an in-app notification. |
 | Wait range (US-15) | 15–20 min per person ahead, the person in the chair included. |
